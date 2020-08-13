@@ -17,6 +17,14 @@ public class MainActivity extends SlidingFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        initSlidingMenu();
+
+        //初始化Fragment
+        initFragment();
+    }
+
+    private void initSlidingMenu() {
         //1.设置主页面
         setContentView(R.layout.activity_main);
 
@@ -31,18 +39,15 @@ public class MainActivity extends SlidingFragmentActivity {
         slidingMenu.setMode(SlidingMenu.LEFT);
 
         //5.设置滑动模式：滑动边缘、全屏滑动、不可以滑动
-        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
 
         //6.设置主页占据的宽度
         slidingMenu.setBehindOffset(DensityUtil.dip2px(MainActivity.this, 200));
-
-
-        //初始化Fragment
-        initFragment();
     }
 
     private void initFragment() {
-       /* //1.得到FragmentManager
+        /*
+        //1.得到FragmentManager
         FragmentManager fragmentManager = getSupportFragmentManager();
         //2.开启事务
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -51,8 +56,7 @@ public class MainActivity extends SlidingFragmentActivity {
         transaction.replace(R.id.fl_leftmenu, new LeftmenuFragment(), LEFTMENU_TAG);  //主页
         //4.提交
         transaction.commit();
-
-*/
+        */
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fl_main_content, new ContentFragment(), MAIN_CONTENT_TAG)
                 .replace(R.id.fl_leftmenu, new LeftmenuFragment(), LEFTMENU_TAG)
