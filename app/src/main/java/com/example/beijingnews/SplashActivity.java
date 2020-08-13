@@ -1,5 +1,6 @@
 package com.example.beijingnews;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -7,22 +8,27 @@ import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.beijingnews.activity.GuideActivity;
+import com.example.beijingnews.activity.MainActivity;
+import com.example.beijingnews.utils.CacheUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SplashActivity extends AppCompatActivity {
 
+    //静态常量
+    public static final String START_MAIN = "start_main";
     @BindView(R.id.ll_splash_root)
     LinearLayout llSplashRoot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
 
         //渐变动画，缩放动画，旋转动画
@@ -57,7 +63,21 @@ public class SplashActivity extends AppCompatActivity {
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            Toast.makeText(SplashActivity.this,"动画播放完成了",Toast.LENGTH_SHORT).show();
+            //判断是否进入过引导页面
+            boolean isStartMain = CacheUtils.getBoolean(SplashActivity.this, START_MAIN);
+            Intent intent;
+            if (isStartMain) {
+                //进入过则直接进入主页面
+                intent = new Intent(SplashActivity.this, MainActivity.class);
+            } else {
+                //未进入过则进入引导页面
+                intent = new Intent(SplashActivity.this, GuideActivity.class);
+            }
+            startActivity(intent);
+            //关闭splash页面
+            finish();
+
+            //Toast.makeText(SplashActivity.this,"动画播放完成了",Toast.LENGTH_SHORT).show();
         }
 
         @Override
