@@ -74,4 +74,72 @@ public class ContentFragment extends BaseFragment {
         rgMain.check(R.id.rb_home);
         basePagers.get(0).initData();
     }
+
+    public NewsCenterPager getNewsCenterPager() {
+        return (NewsCenterPager) basePagers.get(1);
+    }
+
+    class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        /**
+         * 当某个页面被选中的时候回调这个方法
+         *
+         * @param position
+         */
+        @Override
+        public void onPageSelected(int position) {
+            basePagers.get(position).initData();
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    }
+
+    class MyOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
+
+        @Override
+        public void onCheckedChanged(RadioGroup group, int checkedId) {
+            switch (checkedId) {
+                case R.id.rb_home:
+                    viewpager.setCurrentItem(0, false);
+                    isEnableSlidingMenu(SlidingMenu.TOUCHMODE_NONE);
+                    break;
+                case R.id.rb_newscenter:
+                    viewpager.setCurrentItem(1, false);
+                    isEnableSlidingMenu(SlidingMenu.TOUCHMODE_FULLSCREEN);
+                    break;
+                case R.id.rb_smartservice:
+                    viewpager.setCurrentItem(2, false);
+                    isEnableSlidingMenu(SlidingMenu.TOUCHMODE_NONE);
+                    break;
+                case R.id.rb_govaffair:
+                    viewpager.setCurrentItem(3, false);
+                    isEnableSlidingMenu(SlidingMenu.TOUCHMODE_NONE);
+                    break;
+                case R.id.rb_setting:
+                    viewpager.setCurrentItem(4, false);
+                    isEnableSlidingMenu(SlidingMenu.TOUCHMODE_NONE);
+                    break;
+            }
+        }
+    }
+
+
+    /**
+     * 根据传入的参数设置是否让SlidingMenu可以滑动
+     *
+     * @param touchmodeFullscreen
+     */
+    private void isEnableSlidingMenu(int touchmodeFullscreen) {
+        MainActivity mainActivity = (MainActivity) context;
+        mainActivity.getSlidingMenu().setTouchModeAbove(touchmodeFullscreen);
+    }
+
 }

@@ -7,6 +7,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.beijingnews.R;
+import com.example.beijingnews.activity.MainActivity;
 
 /**
  * 基类或者说公共类
@@ -42,6 +43,15 @@ public class BasePager {
         tvTitle = view.findViewById(R.id.tv_title);
         ibMenu = view.findViewById(R.id.ib_menu);
         flContent = view.findViewById(R.id.fl_content);
+
+        ibMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity mainActivity = (MainActivity) context;
+                mainActivity.getSlidingMenu().toggle();     //开<--->关
+            }
+        });
+
         return view;
     }
 

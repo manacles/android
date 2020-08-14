@@ -1,6 +1,7 @@
 package com.example.beijingnews.activity;
 
 import android.os.Bundle;
+import android.view.Window;
 
 import com.example.beijingnews.R;
 import com.example.beijingnews.fragment.ContentFragment;
@@ -16,6 +17,7 @@ public class MainActivity extends SlidingFragmentActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);      //设置没有标题
         super.onCreate(savedInstanceState);
 
         initSlidingMenu();
@@ -61,5 +63,23 @@ public class MainActivity extends SlidingFragmentActivity {
                 .replace(R.id.fl_main_content, new ContentFragment(), MAIN_CONTENT_TAG)
                 .replace(R.id.fl_leftmenu, new LeftmenuFragment(), LEFTMENU_TAG)
                 .commit();
+    }
+
+    /**
+     * 得到左侧菜单Fragment
+     *
+     * @return
+     */
+    public LeftmenuFragment getLeftmenuFragment() {
+        return (LeftmenuFragment) getSupportFragmentManager().findFragmentByTag(LEFTMENU_TAG);
+    }
+
+    /**
+     * 得到正文的Fragment
+     *
+     * @return
+     */
+    public ContentFragment getContentFragment() {
+        return (ContentFragment) getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT_TAG);
     }
 }

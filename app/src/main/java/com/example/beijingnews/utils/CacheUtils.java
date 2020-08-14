@@ -32,4 +32,28 @@ public class CacheUtils {
         editor.putBoolean(key, value);
         editor.apply();
     }
+
+    /**
+     * 缓存文本数据
+     *
+     * @param context
+     * @param key
+     * @param value
+     */
+    public static void putString(Context context, String key, String value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("buchiyu", Context.MODE_PRIVATE);
+        sharedPreferences.edit().putString(key, value).apply();
+    }
+
+    /**
+     * 得到缓存的文本数据
+     *
+     * @param context
+     * @param key
+     * @return
+     */
+    public static String getString(Context context, String key) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("buchiyu", Context.MODE_PRIVATE);
+        return sharedPreferences.getString(key, "");
+    }
 }
