@@ -11,10 +11,12 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.beijingnews.R;
+import com.example.beijingnews.activity.MainActivity;
 import com.example.beijingnews.base.MenuDetailBasePager;
 import com.example.beijingnews.domain.NewsCenterPagerBean2;
 import com.example.beijingnews.menudetailpager.tabdetailpager.TabDetailPager;
 import com.example.beijingnews.view.MyTabPageIndicator;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import org.xutils.common.util.LogUtil;
 import org.xutils.view.annotation.ViewInject;
@@ -59,6 +61,7 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
                 viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
             }
         });
+
         return view;
     }
 
@@ -79,8 +82,26 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
         tabPageIndicator.setViewPager(viewPager);
 
         //注意以后监听页面的变化，需要用TabPageIndicator来监听
+        tabPageIndicator.setOnPageChangeListener(new MyOnPageChangeListener());
 
+    }
 
+    class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            isEnableSlidingMenu(position == 0 ? SlidingMenu.TOUCHMODE_FULLSCREEN : SlidingMenu.TOUCHMODE_NONE);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
     }
 
     class MyNewsMenuDetailPagerAdapter extends PagerAdapter {
@@ -115,5 +136,15 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
         }
+    }
+
+    /**
+     * 根据传入的参数设置是否让SlidingMenu可以滑动
+     *
+     * @param touchmodeFullscreen
+     */
+    private void isEnableSlidingMenu(int touchmodeFullscreen) {
+        MainActivity mainActivity = (MainActivity) context;
+        mainActivity.getSlidingMenu().setTouchModeAbove(touchmodeFullscreen);
     }
 }
