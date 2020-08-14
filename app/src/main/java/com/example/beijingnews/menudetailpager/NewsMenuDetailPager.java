@@ -3,6 +3,7 @@ package com.example.beijingnews.menudetailpager;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,7 +14,7 @@ import com.example.beijingnews.R;
 import com.example.beijingnews.base.MenuDetailBasePager;
 import com.example.beijingnews.domain.NewsCenterPagerBean2;
 import com.example.beijingnews.menudetailpager.tabdetailpager.TabDetailPager;
-import com.viewpagerindicator.TabPageIndicator;
+import com.example.beijingnews.view.MyTabPageIndicator;
 
 import org.xutils.common.util.LogUtil;
 import org.xutils.view.annotation.ViewInject;
@@ -31,7 +32,10 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
     private ViewPager viewPager;
 
     @ViewInject(R.id.tabPageIndicator)
-    private TabPageIndicator tabPageIndicator;
+    private MyTabPageIndicator tabPageIndicator;
+
+    @ViewInject(R.id.ib_tab_next)
+    private ImageButton ibTabNext;
 
     //页签页面的数据的集合--数据
     private List<NewsCenterPagerBean2.NewsData.ChildrenData> childrenData;
@@ -47,7 +51,14 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
     public View initView() {
         View view = View.inflate(context, R.layout.newsmenu_detail_pager, null);
         x.view().inject(NewsMenuDetailPager.this, view);
-        //tabPageIndicator.set
+
+        //设置ImageButton的点击事件
+        ibTabNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+            }
+        });
         return view;
     }
 
