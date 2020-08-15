@@ -25,7 +25,7 @@ import com.example.beijingnews.domain.TabDetailPagerBean;
 import com.example.beijingnews.utils.CacheUtils;
 import com.example.beijingnews.utils.Constants;
 import com.example.beijingnews.view.HorizontalScrollViewPager;
-import com.example.beijingnews.view.RefreshListview;
+import com.example.refreshlistview.RefreshListview;
 import com.google.gson.Gson;
 
 import org.xutils.common.Callback;

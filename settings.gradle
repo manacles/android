@@ -1,2 +1,6 @@
-include ':app', ':SlidingMenu_library'
+include ':app', ':SlidingMenu_library', ':RefreshListView'
 rootProject.name='BeijingNews'
+include ':library'
+include ':pullToRefreshListFragment'
+include ':pullToRefreshViewPager'
+include ':PullToRefresh_sample'
