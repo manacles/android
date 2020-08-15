@@ -24,6 +24,7 @@ import com.example.beijingnews.domain.NewsCenterPagerBean2;
 import com.example.beijingnews.domain.TabDetailPagerBean;
 import com.example.beijingnews.utils.CacheUtils;
 import com.example.beijingnews.utils.Constants;
+import com.example.beijingnews.view.HorizontalScrollViewPager;
 import com.google.gson.Gson;
 
 import org.xutils.common.Callback;
@@ -40,7 +41,7 @@ import java.util.List;
  */
 public class TabDetailPager extends MenuDetailBasePager {
 
-    private ViewPager viewPager;
+    private HorizontalScrollViewPager  viewPager;
     private TextView tvTitle;
     private LinearLayout llPointGroup;
     private ListView listView;
