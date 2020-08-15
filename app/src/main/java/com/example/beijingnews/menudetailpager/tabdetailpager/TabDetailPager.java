@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
@@ -25,6 +25,7 @@ import com.example.beijingnews.domain.TabDetailPagerBean;
 import com.example.beijingnews.utils.CacheUtils;
 import com.example.beijingnews.utils.Constants;
 import com.example.beijingnews.view.HorizontalScrollViewPager;
+import com.example.beijingnews.view.RefreshListview;
 import com.google.gson.Gson;
 
 import org.xutils.common.Callback;
@@ -41,10 +42,10 @@ import java.util.List;
  */
 public class TabDetailPager extends MenuDetailBasePager {
 
-    private HorizontalScrollViewPager  viewPager;
+    private HorizontalScrollViewPager viewPager;
     private TextView tvTitle;
     private LinearLayout llPointGroup;
-    private ListView listView;
+    private RefreshListview listView;
     private ImageOptions imageOptions;
 
     /**
@@ -58,6 +59,13 @@ public class TabDetailPager extends MenuDetailBasePager {
     private List<TabDetailPagerBean.DataBean.TopnewsBean> topnews;
     //底部ListView列表的数据
     private List<TabDetailPagerBean.DataBean.NewsBean> news;
+
+    private TabDetailPagerNewsAdapter adapter;
+
+    //下一页的联网路径
+    private String moreUrl;
+    //是否加载更多
+    private boolean isLoadMore = false;
 
 
     public TabDetailPager(Context context, NewsCenterPagerBean2.NewsData.ChildrenData childrenData) {
@@ -84,8 +92,65 @@ public class TabDetailPager extends MenuDetailBasePager {
         llPointGroup = topNewsView.findViewById(R.id.ll_point_group);
 
         //把顶部轮播图以头的方式添加到ListView中
-        listView.addHeaderView(topNewsView);
+        //listView.addHeaderView(topNewsView);
+
+        listView.addTopNewsView(topNewsView);
+
+
+        //设置监听下拉刷新
+        listView.setOnRefreshListener(new RefreshListview.OnRefreshListener() {
+            @Override
+            public void onPullDownRefresh() {
+                getDataFromNet();
+            }
+
+            @Override
+            public void onLoadMore() {
+                if (TextUtils.isEmpty(moreUrl)) {
+                    //没有更多数据
+                    Toast.makeText(context, "没有更多数据", Toast.LENGTH_SHORT).show();
+                    listView.onRefreshFinish(false);
+                } else {
+                    getMoreDataFromNet();
+                }
+            }
+        });
+
         return view;
+    }
+
+    private void getMoreDataFromNet() {
+        RequestParams params = new RequestParams(moreUrl);
+        params.setConnectTimeout(4000);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+
+                LogUtil.e("加载更多请求成功==" + result);
+                isLoadMore = true;
+
+                //解析数据
+                processData(result);
+
+                listView.onRefreshFinish(false);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                LogUtil.e("加载更多请求失败==" + ex.getMessage());
+                listView.onRefreshFinish(false);
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                LogUtil.e("加载更多请求onCancelled==" + cex.getMessage());
+            }
+
+            @Override
+            public void onFinished() {
+                LogUtil.e("加载更多请求onFinished");
+            }
+        });
     }
 
     @Override
@@ -105,17 +170,25 @@ public class TabDetailPager extends MenuDetailBasePager {
 
     private void getDataFromNet() {
         RequestParams params = new RequestParams(url);
+        params.setConnectTimeout(4000);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 CacheUtils.putString(context, url, result);
                 LogUtil.e(childrenData.getTitle() + "-页面数据请求成功==" + result);
                 processData(result);
+
+                //隐藏下拉刷新控件--重新显示数据，更新时间
+                listView.onRefreshFinish(true);
+
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 LogUtil.e(childrenData.getTitle() + "-页面数据请求失败==" + ex.getMessage());
+
+                //隐藏下拉刷新控件--不更新时间，只是隐藏
+                listView.onRefreshFinish(false);
             }
 
             @Override
@@ -133,26 +206,49 @@ public class TabDetailPager extends MenuDetailBasePager {
     private void processData(String json) {
         TabDetailPagerBean bean = parseJson(json);
 
-        LogUtil.e(bean.getData().getNews().get(0).getTitle());
 
-        //顶部轮播图的数据
-        topnews = bean.getData().getTopnews();
-        //设置ViewPager的适配器
-        viewPager.setAdapter(new TabDetailPagerTopNewsAdapter());
+        if (TextUtils.isEmpty(bean.getData().getMore())) {
+            moreUrl = "";
+        } else {
+            moreUrl = Constants.BASE_URL + bean.getData().getMore();
+        }
 
-        /**
-         * 设置 轮播图初始状态
-         */
-        addPoint();
-        tvTitle.setText(topnews.get(prePosition).getTitle());
-        viewPager.setCurrentItem(prePosition);
+        //默认和加载更多
+        if (!isLoadMore) {
+            //默认
 
-        //监听ViewPager的改变，设置红点变化和文本变化
-        viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
+            //顶部轮播图的数据
+            topnews = bean.getData().getTopnews();
+            //设置ViewPager的适配器
+            viewPager.setAdapter(new TabDetailPagerTopNewsAdapter());
 
-        //准备ListView的数据集合
-        news = bean.getData().getNews();
-        listView.setAdapter(new TabDetailPagerNewsAdapter());
+            /**
+             * 设置 轮播图初始状态
+             */
+            addPoint();
+            tvTitle.setText(topnews.get(prePosition).getTitle());
+            viewPager.setCurrentItem(prePosition);
+
+            //监听ViewPager的改变，设置红点变化和文本变化
+            viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
+
+            //准备ListView的数据集合
+            news = bean.getData().getNews();
+            //设置ListView的适配器
+            adapter = new TabDetailPagerNewsAdapter();
+            listView.setAdapter(adapter);
+
+        } else {
+            //加载更多
+            isLoadMore = false;
+
+            //添加到原来的集合中
+            news.addAll(bean.getData().getNews());
+            //刷新适配器
+            adapter.notifyDataSetChanged();
+
+        }
+
     }
 
     private void addPoint() {
