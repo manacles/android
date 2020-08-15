@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -13,6 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.beijingnews.R;
 import com.example.beijingnews.base.MenuDetailBasePager;
 import com.example.beijingnews.domain.NewsCenterPagerBean2;
@@ -25,6 +30,7 @@ import org.xutils.common.Callback;
 import org.xutils.common.util.DensityUtil;
 import org.xutils.common.util.LogUtil;
 import org.xutils.http.RequestParams;
+import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
 import java.util.List;
@@ -38,25 +44,46 @@ public class TabDetailPager extends MenuDetailBasePager {
     private TextView tvTitle;
     private LinearLayout llPointGroup;
     private ListView listView;
+    private ImageOptions imageOptions;
+
+    /**
+     * 之前高亮点的位置
+     */
+    private int prePosition;
 
     private final NewsCenterPagerBean2.NewsData.ChildrenData childrenData;
     private String url;
     //顶部轮播图部分的数据
     private List<TabDetailPagerBean.DataBean.TopnewsBean> topnews;
+    //底部ListView列表的数据
+    private List<TabDetailPagerBean.DataBean.NewsBean> news;
 
 
     public TabDetailPager(Context context, NewsCenterPagerBean2.NewsData.ChildrenData childrenData) {
         super(context);
         this.childrenData = childrenData;
+        imageOptions = new ImageOptions.Builder()
+                .setSize(DensityUtil.dip2px(90), DensityUtil.dip2px(90))
+                .setRadius(DensityUtil.dip2px(5))
+                .setCrop(true)
+                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                .setLoadingDrawableId(R.drawable.news_pic_default)
+                .setFailureDrawableId(R.drawable.news_pic_default)
+                .build();
     }
 
     @Override
     public View initView() {
         View view = View.inflate(context, R.layout.tabdetail_pager, null);
-        viewPager = view.findViewById(R.id.viewpager);
-        tvTitle = view.findViewById(R.id.tv_title);
-        llPointGroup = view.findViewById(R.id.ll_point_group);
         listView = view.findViewById(R.id.listview);
+
+        View topNewsView = View.inflate(context, R.layout.topnews, null);
+        viewPager = topNewsView.findViewById(R.id.viewpager);
+        tvTitle = topNewsView.findViewById(R.id.tv_title);
+        llPointGroup = topNewsView.findViewById(R.id.ll_point_group);
+
+        //把顶部轮播图以头的方式添加到ListView中
+        listView.addHeaderView(topNewsView);
         return view;
     }
 
@@ -102,11 +129,6 @@ public class TabDetailPager extends MenuDetailBasePager {
         });
     }
 
-    /**
-     * 之前高亮点的位置
-     */
-    private int prePosition;
-
     private void processData(String json) {
         TabDetailPagerBean bean = parseJson(json);
 
@@ -117,13 +139,19 @@ public class TabDetailPager extends MenuDetailBasePager {
         //设置ViewPager的适配器
         viewPager.setAdapter(new TabDetailPagerTopNewsAdapter());
 
+        /**
+         * 设置 轮播图初始状态
+         */
         addPoint();
+        tvTitle.setText(topnews.get(prePosition).getTitle());
+        viewPager.setCurrentItem(prePosition);
 
         //监听ViewPager的改变，设置红点变化和文本变化
         viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
-        tvTitle.setText(topnews.get(prePosition).getTitle());
 
-
+        //准备ListView的数据集合
+        news = bean.getData().getNews();
+        listView.setAdapter(new TabDetailPagerNewsAdapter());
     }
 
     private void addPoint() {
@@ -134,10 +162,8 @@ public class TabDetailPager extends MenuDetailBasePager {
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DensityUtil.dip2px(5), DensityUtil.dip2px(5));
 
-            if (i == 0) {
-                imageView.setEnabled(true);
-            } else {
-                imageView.setEnabled(false);
+            imageView.setEnabled(i == prePosition);
+            if (i != 0) {
                 params.leftMargin = DensityUtil.dip2px(8);
             }
 
@@ -172,6 +198,77 @@ public class TabDetailPager extends MenuDetailBasePager {
         public void onPageScrollStateChanged(int state) {
 
         }
+    }
+
+    class TabDetailPagerNewsAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return news.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder;
+            if (convertView == null) {
+                convertView = View.inflate(context, R.layout.item_tabdetail_pager, null);
+                viewHolder = new ViewHolder();
+                viewHolder.ivListImage = convertView.findViewById(R.id.iv_listimage);
+                viewHolder.tvTitle = convertView.findViewById(R.id.tv_title);
+                viewHolder.tvPubdate = convertView.findViewById(R.id.tv_pubdate);
+
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            //根据位置得到数据
+            TabDetailPagerBean.DataBean.NewsBean newsBean = news.get(position);
+            String imgUrl = Constants.BASE_URL + newsBean.getListimage();
+
+            /**
+             * 两种图片请求方式：xutils3、glide
+             */
+
+            //使用xUtils3请求图片
+            //x.image().bind(viewHolder.ivListImage, imgUrl,imageOptions);
+
+            //使用Glide请求图片
+            //设置图片圆角角度
+            RoundedCorners roundedCorners = new RoundedCorners(DensityUtil.dip2px(5));//px
+            //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
+            RequestOptions options = RequestOptions.bitmapTransform(roundedCorners)
+                    .override(DensityUtil.dip2px(90), DensityUtil.dip2px(90));
+            Glide.with(context)
+                    .load(imgUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .error(R.drawable.news_pic_default) //异常时候显示的图片
+                    .placeholder(R.drawable.news_pic_default) //加载成功前显示的图片
+                    .fallback(R.drawable.news_pic_default) //url为空的时候,显示的图片
+                    .apply(options)
+                    .into(viewHolder.ivListImage);
+
+            viewHolder.tvTitle.setText(newsBean.getTitle());
+            viewHolder.tvPubdate.setText(newsBean.getPubdate());
+
+            return convertView;
+        }
+    }
+
+    static class ViewHolder {
+        ImageView ivListImage;
+        TextView tvTitle;
+        TextView tvPubdate;
     }
 
     class TabDetailPagerTopNewsAdapter extends PagerAdapter {
