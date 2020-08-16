@@ -1,9 +1,12 @@
 package com.example.beijingnews.menudetailpager.tabdetailpager;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,6 +22,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.beijingnews.R;
+import com.example.beijingnews.activity.NewsDetailActivity;
 import com.example.beijingnews.base.MenuDetailBasePager;
 import com.example.beijingnews.domain.NewsCenterPagerBean2;
 import com.example.beijingnews.domain.TabDetailPagerBean;
@@ -42,6 +46,7 @@ import java.util.List;
  */
 public class TabDetailPager extends MenuDetailBasePager {
 
+    public static final String READ_ARRAY_ID = "read_array_id";
     private HorizontalScrollViewPager viewPager;
     private TextView tvTitle;
     private LinearLayout llPointGroup;
@@ -97,7 +102,7 @@ public class TabDetailPager extends MenuDetailBasePager {
         listView.addTopNewsView(topNewsView);
 
 
-        //设置监听下拉刷新
+        //设置监听下拉刷新和加载更多
         listView.setOnRefreshListener(new RefreshListview.OnRefreshListener() {
             @Override
             public void onPullDownRefresh() {
@@ -113,6 +118,32 @@ public class TabDetailPager extends MenuDetailBasePager {
                 } else {
                     getMoreDataFromNet();
                 }
+            }
+        });
+
+        //设置ListView的item的监听
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int realPosition = position - 1;
+                TabDetailPagerBean.DataBean.NewsBean newsBean = news.get(realPosition);
+//                Toast.makeText(context, "newsBean:id==" + newsBean.getId() + "title:" + newsBean.getTitle(), Toast.LENGTH_SHORT).show();
+                LogUtil.e("newsBean:id==" + newsBean.getId() + "title:" + newsBean.getTitle() + ",url=" + newsBean.getUrl());
+
+                //1.取出保存的Id集合
+                String idArray = CacheUtils.getString(context, READ_ARRAY_ID);
+                //2.判断是否存在，如果不存在，才保存，并且刷新适配器
+                if (!idArray.contains(newsBean.getId() + "")) {
+                    CacheUtils.putString(context, READ_ARRAY_ID, idArray + newsBean.getId() + ",");
+
+                    //刷新适配器
+                    adapter.notifyDataSetChanged();
+                }
+
+                //跳转到新闻浏览页面
+                Intent intent = new Intent(context, NewsDetailActivity.class);
+                intent.putExtra("url", Constants.BASE_URL + newsBean.getUrl());
+                context.startActivity(intent);
             }
         });
 
@@ -357,6 +388,14 @@ public class TabDetailPager extends MenuDetailBasePager {
 
             viewHolder.tvTitle.setText(newsBean.getTitle());
             viewHolder.tvPubdate.setText(newsBean.getPubdate());
+
+            //根据是否阅读设置标题颜色
+            String idArray = CacheUtils.getString(context, READ_ARRAY_ID);
+            if (idArray.contains(newsBean.getId() + "")) {
+                viewHolder.tvTitle.setTextColor(Color.GRAY);
+            } else {
+                viewHolder.tvTitle.setTextColor(Color.BLACK);
+            }
 
             return convertView;
         }
