@@ -43,6 +43,7 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
     implementation project(path: ':RefreshListView')
     implementation project(path: ':PullToRefresh_library')
 
@@ -51,4 +52,6 @@ dependencies {
     implementation 'com.alibaba:fastjson:1.1.72.android'
 
     implementation 'androidx.cardview:cardview:1.0.0'
+
+    implementation 'com.google.android.material:material:1.2.0'
 }

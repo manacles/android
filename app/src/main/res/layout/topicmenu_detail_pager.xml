@@ -9,13 +9,21 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.example.beijingnews.view.MyTabPageIndicator
-            android:id="@+id/tabPageIndicator"
+        <!--   <com.example.beijingnews.view.MyTabPageIndicator
+               android:id="@+id/tabPageIndicator"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center_vertical"
+               android:layout_weight="1"
+               android:theme="@style/Theme.PageIndicatorDefaults" />-->
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tablayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:theme="@style/Theme.PageIndicatorDefaults" />
+            style="@style/MyTabLayout"
+            android:layout_weight="1" />
 
         <ImageButton
             android:id="@+id/ib_tab_next"

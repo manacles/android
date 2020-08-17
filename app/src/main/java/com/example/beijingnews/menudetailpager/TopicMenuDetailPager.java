@@ -1,9 +1,12 @@
 package com.example.beijingnews.menudetailpager;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +18,7 @@ import com.example.beijingnews.activity.MainActivity;
 import com.example.beijingnews.base.MenuDetailBasePager;
 import com.example.beijingnews.domain.NewsCenterPagerBean2;
 import com.example.beijingnews.menudetailpager.tabdetailpager.TopicDetailPager;
-import com.example.beijingnews.view.MyTabPageIndicator;
+import com.google.android.material.tabs.TabLayout;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import org.xutils.common.util.LogUtil;
@@ -33,8 +36,8 @@ public class TopicMenuDetailPager extends MenuDetailBasePager {
     @ViewInject(R.id.viewpager)
     private ViewPager viewPager;
 
-    @ViewInject(R.id.tabPageIndicator)
-    private MyTabPageIndicator tabPageIndicator;
+    @ViewInject(R.id.tablayout)
+    private TabLayout tabLayout;
 
     @ViewInject(R.id.ib_tab_next)
     private ImageButton ibTabNext;
@@ -79,12 +82,34 @@ public class TopicMenuDetailPager extends MenuDetailBasePager {
         //设置ViewPager的适配器
         viewPager.setAdapter(new TopicMenuDetailPager.MyNewsMenuDetailPagerAdapter());
         //ViewPager和TabPageIndicator关联
-        tabPageIndicator.setViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager);
 
         //注意以后监听页面的变化，需要用TabPageIndicator来监听
-        tabPageIndicator.setOnPageChangeListener(new TopicMenuDetailPager.MyOnPageChangeListener());
+        viewPager.addOnPageChangeListener(new TopicMenuDetailPager.MyOnPageChangeListener());
 
+        //设置固定或者滑动
+        //tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+
+        /*自定义TabLayout的样式*/
+        /*
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
+            tab.setCustomView(getTabView(i));
+        }
+        */
     }
+
+    /*自定义TabLayout的样式*/
+    private View getTabView(int i) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_tab, null);
+        TextView tv = view.findViewById(R.id.textview);
+        ImageView imageView = view.findViewById(R.id.imageview);
+        tv.setText(childrenData.get(i).getTitle());
+        imageView.setImageResource(R.drawable.arrow_drop_up);
+        return view;
+    }
+
 
     class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
 
