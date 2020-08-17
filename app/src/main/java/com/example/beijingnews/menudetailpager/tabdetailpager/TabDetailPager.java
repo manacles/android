@@ -3,7 +3,10 @@ package com.example.beijingnews.menudetailpager.tabdetailpager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -71,6 +74,7 @@ public class TabDetailPager extends MenuDetailBasePager {
     private String moreUrl;
     //是否加载更多
     private boolean isLoadMore = false;
+    private InternalHandler internalHandler;
 
 
     public TabDetailPager(Context context, NewsCenterPagerBean2.NewsData.ChildrenData childrenData) {
@@ -280,6 +284,33 @@ public class TabDetailPager extends MenuDetailBasePager {
 
         }
 
+        //发消息，每隔4000切换一次ViewPager页面
+        if (internalHandler == null) {
+            internalHandler = new InternalHandler();
+        }
+        //是把消息队列所有的消息和回调
+        internalHandler.removeCallbacksAndMessages(null);
+
+        internalHandler.postDelayed(new MyRunnable(), 4000);
+
+    }
+
+    class InternalHandler extends Handler {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            //切换到ViewPager的下一个页面
+            viewPager.setCurrentItem((viewPager.getCurrentItem() + 1) % topnews.size());
+
+            internalHandler.postDelayed(new MyRunnable(), 4000);
+        }
+    }
+
+    class MyRunnable implements Runnable {
+        @Override
+        public void run() {
+            internalHandler.sendEmptyMessage(0);
+        }
     }
 
     private void addPoint() {
@@ -322,9 +353,25 @@ public class TabDetailPager extends MenuDetailBasePager {
             LogUtil.e("prePosition----》" + prePosition);
         }
 
+        private boolean isDragging = false;
+
         @Override
         public void onPageScrollStateChanged(int state) {
-
+            if (state == ViewPager.SCROLL_STATE_DRAGGING) {    //拖拽
+                isDragging = true;
+                //拖拽要移除消息
+                internalHandler.removeCallbacksAndMessages(null);
+            } else if (state == ViewPager.SCROLL_STATE_SETTLING && isDragging) {  //惯性
+                //发消息
+                isDragging = false;
+                internalHandler.removeCallbacksAndMessages(null);
+                internalHandler.postDelayed(new MyRunnable(), 4000);
+            } else if (state == ViewPager.SCROLL_STATE_IDLE && isDragging) {  //静止
+                //发消息
+                isDragging = false;
+                internalHandler.removeCallbacksAndMessages(null);
+                internalHandler.postDelayed(new MyRunnable(), 4000);
+            }
         }
     }
 
@@ -435,6 +482,23 @@ public class TabDetailPager extends MenuDetailBasePager {
 
             //联网请求图片
             x.image().bind(imageView, imgUrl);
+
+            imageView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            //是把消息队列所有的消息和回调
+                            internalHandler.removeCallbacksAndMessages(null);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            internalHandler.removeCallbacksAndMessages(null);
+                            internalHandler.postDelayed(new MyRunnable(), 4000);
+                            break;
+                    }
+                    return true;
+                }
+            });
 
             return imageView;
         }
