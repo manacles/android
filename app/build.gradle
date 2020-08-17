@@ -47,4 +47,8 @@ dependencies {
     implementation project(path: ':PullToRefresh_library')
 
     implementation 'com.android.volley:volley:1.1.1'
+
+    implementation 'com.alibaba:fastjson:1.1.72.android'
+
+    implementation 'androidx.cardview:cardview:1.0.0'
 }

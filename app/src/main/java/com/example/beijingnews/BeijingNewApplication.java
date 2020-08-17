@@ -2,6 +2,8 @@ package com.example.beijingnews;
 
 import android.app.Application;
 
+import com.example.beijingnews.volley.VolleyManager;
+
 import org.xutils.x;
 
 /**
@@ -18,5 +20,7 @@ public class BeijingNewApplication extends Application {
         //xUtils3初始化
         x.Ext.init(this);
         x.Ext.setDebug(BuildConfig.DEBUG); // 是否输出debug日志, 开启debug会影响性能.
+        //初始化Volley
+        VolleyManager.init(this);
     }
 }

@@ -192,7 +192,7 @@ public class NewsCenterPager extends BasePager {
         detailBasePagers = new ArrayList<>();
         detailBasePagers.add(new NewsMenuDetailPager(context, data.get(0)));
         detailBasePagers.add(new TopicMenuDetailPager(context, data.get(0)));
-        detailBasePagers.add(new PhotosMenuDetailPager(context));
+        detailBasePagers.add(new PhotosMenuDetailPager(context,data.get(2))) ;
         detailBasePagers.add(new InteractMenuDetailPager(context));
 
 
@@ -300,6 +300,24 @@ public class NewsCenterPager extends BasePager {
         View rootView = detailBasePager.rootView;
         detailBasePager.initData();     //初始化数据
         flContent.addView(rootView);
+
+        if (position == 2) {
+            //图组详情页面
+            ibSwitchListGrid.setVisibility(View.VISIBLE);
+            //设置点击事件
+            ibSwitchListGrid.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //1.得到图组详情页面对象
+                    PhotosMenuDetailPager photosMenuDetailPager = (PhotosMenuDetailPager) detailBasePagers.get(2);
+                    //2.调用图组对象的切换ListView和GridView的方法
+                    photosMenuDetailPager.switchListAndGrid(ibSwitchListGrid);
+                }
+            });
+        } else {
+            //其他页面
+            ibSwitchListGrid.setVisibility(View.GONE);
+        }
 
     }
 }

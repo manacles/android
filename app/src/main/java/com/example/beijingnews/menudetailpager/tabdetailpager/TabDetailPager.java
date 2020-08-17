@@ -350,7 +350,6 @@ public class TabDetailPager extends MenuDetailBasePager {
 
             prePosition = position;
 
-            LogUtil.e("prePosition----》" + prePosition);
         }
 
         private boolean isDragging = false;

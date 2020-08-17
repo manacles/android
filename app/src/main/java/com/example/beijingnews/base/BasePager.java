@@ -25,6 +25,8 @@ public class BasePager {
     //加载各个子页面的
     public FrameLayout flContent;
 
+    //组图页面的切换按钮
+    public ImageButton ibSwitchListGrid;
 
     public BasePager(Context context) {
         this.context = context;
@@ -43,6 +45,7 @@ public class BasePager {
         tvTitle = view.findViewById(R.id.tv_title);
         ibMenu = view.findViewById(R.id.ib_menu);
         flContent = view.findViewById(R.id.fl_content);
+        ibSwitchListGrid = view.findViewById(R.id.ib_switch_list_grid);
 
         ibMenu.setOnClickListener(new View.OnClickListener() {
             @Override
