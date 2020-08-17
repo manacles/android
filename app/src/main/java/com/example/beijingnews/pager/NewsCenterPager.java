@@ -2,11 +2,20 @@ package com.example.beijingnews.pager;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.beijingnews.activity.MainActivity;
 import com.example.beijingnews.base.BasePager;
 import com.example.beijingnews.base.MenuDetailBasePager;
@@ -29,6 +38,7 @@ import org.xutils.common.util.LogUtil;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +52,7 @@ public class NewsCenterPager extends BasePager {
 
     //详情页面的集合
     private ArrayList<MenuDetailBasePager> detailBasePagers;
+    private long startTime;
 
     public NewsCenterPager(Context context) {
         super(context);
@@ -66,13 +77,60 @@ public class NewsCenterPager extends BasePager {
         textView.setText("我是新闻中心的内容");
 
         //获取缓存数据
-        String savaJson = CacheUtils.getString(context,Constants.NESCENTER_PAGER_URL);
-        if (!TextUtils.isEmpty(savaJson)){
+        String savaJson = CacheUtils.getString(context, Constants.NESCENTER_PAGER_URL);
+        if (!TextUtils.isEmpty(savaJson)) {
             processData(savaJson);
         }
 
+        startTime = SystemClock.uptimeMillis();
         //联网请求数据
-        getDataFromNet();
+//        getDataFromNet();
+        getDataFromNetByVolley();
+    }
+
+    /**
+     * 使用Volley联网请求数据
+     */
+    private void getDataFromNetByVolley() {
+        //请求队列
+        RequestQueue queue = Volley.newRequestQueue(context);
+        //String请求
+        StringRequest request = new StringRequest(Request.Method.GET,
+                Constants.NESCENTER_PAGER_URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                long endTime = SystemClock.uptimeMillis();
+                long passTime = endTime - startTime;
+                LogUtil.e("使用Volley请求花的时间==" + passTime);
+
+                LogUtil.e("使用Volley联网请求数据成功==" + response);
+                //缓存数据
+                CacheUtils.putString(context, Constants.NESCENTER_PAGER_URL, response);
+
+                processData(response);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                LogUtil.e("使用Volley联网请求数据失败==" + error.getMessage());
+            }
+        }) {
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                String parsed;
+                try {
+                    parsed = new String(response.data, "UTF-8");
+                    return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
+
+        //添加到队列中
+        queue.add(request);
     }
 
     /**
@@ -83,12 +141,15 @@ public class NewsCenterPager extends BasePager {
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
+                long endTime = SystemClock.uptimeMillis();
+                long passTime = endTime - startTime;
+                LogUtil.e("使用xUtils3请求花的时间==" + passTime);
+
                 LogUtil.e("使用xUtils3联网请求成功==" + result);
                 //缓存数据
                 CacheUtils.putString(context, Constants.NESCENTER_PAGER_URL, result);
 
                 processData(result);
-                //设置适配器
 
             }
 
@@ -129,8 +190,8 @@ public class NewsCenterPager extends BasePager {
 
         //添加详情页面
         detailBasePagers = new ArrayList<>();
-        detailBasePagers.add(new NewsMenuDetailPager(context,data.get(0)));
-        detailBasePagers.add(new TopicMenuDetailPager(context,data.get(0)));
+        detailBasePagers.add(new NewsMenuDetailPager(context, data.get(0)));
+        detailBasePagers.add(new TopicMenuDetailPager(context, data.get(0)));
         detailBasePagers.add(new PhotosMenuDetailPager(context));
         detailBasePagers.add(new InteractMenuDetailPager(context));
 
