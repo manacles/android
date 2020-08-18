@@ -1,0 +1,433 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.beijingnews"
+4    android:versionCode="370"
+5    android:versionName="3.7.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="14"
+8-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="30" />
+9-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml
+10    <!-- Required -->
+11    <permission
+12        android:name="com.example.beijingnews.permission.JPUSH_MESSAGE"
+12-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:7:9-65
+13        android:protectionLevel="signature" />
+13-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:8:9-44
+14
+15    <!-- Required  一些系统要求的权限，如访问网络等 -->
+16    <uses-permission android:name="com.example.beijingnews.permission.JPUSH_MESSAGE" />
+16-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:11:22-78
+17    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+17-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:12:5-79
+17-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:12:22-76
+18    <uses-permission android:name="android.permission.INTERNET" />
+18-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:13:5-67
+18-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:13:22-64
+19    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+19-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:14:5-75
+19-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:14:22-72
+20    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+20-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:15:5-81
+20-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:15:22-78
+21    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+21-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:16:5-80
+21-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:16:22-77
+22    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+22-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:17:5-84
+22-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:17:22-81
+23    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+23-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:18:5-79
+23-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:18:22-76
+24    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+24-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:19:5-76
+24-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:19:22-73
+25
+26    <!-- 华为角标 -->
+27    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
+27-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:22:5-23:77
+27-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:23:9-75
+28
+29    <!-- Optional for location -->
+30    <uses-permission android:name="android.permission.VIBRATE" />
+30-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:27:5-66
+30-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:27:22-63
+31    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 用于开启 debug 版本的应用在6.0 系统上 层叠窗口权限 -->
+31-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:28:5-78
+31-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:28:22-75
+32    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+32-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:29:5-81
+32-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:29:22-78
+33    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+33-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:30:5-76
+33-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:30:22-73
+34    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+34-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:31:5-79
+34-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:31:22-76
+35    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- Android Q后台定位权限 -->
+35-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:32:5-85
+35-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:32:22-82
+36    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+36-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:33:5-89
+36-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:33:22-86
+37    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+37-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:34:5-79
+37-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:34:22-76
+38    <uses-permission android:name="android.permission.GET_TASKS" />
+38-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:35:5-68
+38-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:35:22-65
+39
+40    <application
+40-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:37:5-219:19
+41        android:name="com.example.jpushdemo.ExampleApplication"
+41-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:41:9-64
+42        android:allowBackup="false"
+42-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:39:9-36
+43        android:debuggable="true"
+44        android:icon="@drawable/ic_launcher"
+44-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:38:9-45
+45        android:label="@string/app_name" >
+45-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:40:9-41
+46
+47        <!-- For test only 测试的主程序 -->
+48        <activity
+48-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:44:9-51:20
+49            android:name="com.example.jpushdemo.MainActivity"
+49-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:45:13-62
+50            android:label="@string/app_name" >
+50-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:46:13-45
+51            <intent-filter>
+51-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:47:13-50:29
+52                <action android:name="android.intent.action.MAIN" />
+52-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:48:17-69
+52-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:48:25-66
+53
+54                <category android:name="android.intent.category.LAUNCHER" />
+54-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:49:17-77
+54-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:49:27-74
+55            </intent-filter>
+56        </activity>
+57        <!-- For test only 测试高级功能 -->
+58        <activity
+58-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:53:8-115
+59            android:name="com.example.jpushdemo.PushSetActivity"
+59-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:53:18-70
+60            android:label="@string/app_name" />
+60-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:53:71-103
+61        <!-- For test only 测试设置 -->
+62        <activity
+62-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:55:8-115
+63            android:name="com.example.jpushdemo.SettingActivity"
+63-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:55:18-70
+64            android:label="@string/app_name" />
+64-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:55:71-103
+65        <!-- For test only 测试状态通知栏，需要打开的Activity -->
+66        <activity
+66-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:57:9-62:20
+67            android:name="com.example.jpushdemo.TestActivity"
+67-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:57:19-68
+68            android:exported="false" >
+68-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:57:69-93
+69            <intent-filter>
+69-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:58:13-61:29
+70                <action android:name="jpush.testAction" />
+70-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:59:17-59
+70-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:59:25-56
+71
+72                <category android:name="jpush.testCategory" />
+72-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:60:17-63
+72-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:60:27-60
+73            </intent-filter>
+74        </activity>
+75
+76        <!-- Rich push 核心功能 since 2.0.6 -->
+77        <activity
+77-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:65:9-69:20
+78            android:name="cn.jpush.android.ui.PopWinActivity"
+78-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:66:13-62
+79            android:exported="false"
+79-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:68:13-37
+80            android:theme="@style/MyDialogStyle" >
+80-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:67:13-49
+81        </activity>
+82
+83        <!-- Required SDK核心功能 -->
+84        <activity
+84-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:72:9-82:20
+85            android:name="cn.jpush.android.ui.PushActivity"
+85-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:73:13-60
+86            android:configChanges="orientation|keyboardHidden"
+86-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:74:13-63
+87            android:exported="false"
+87-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:76:13-37
+88            android:theme="@android:style/Theme.NoTitleBar" >
+88-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:75:13-60
+89            <intent-filter>
+89-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:77:13-81:29
+90                <action android:name="cn.jpush.android.ui.PushActivity" />
+90-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:78:17-75
+90-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:78:25-72
+91
+92                <category android:name="android.intent.category.DEFAULT" />
+92-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:79:17-76
+92-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:79:27-73
+93                <category android:name="com.example.beijingnews" />
+93-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:80:27-58
+94            </intent-filter>
+95        </activity>
+96
+97        <!-- Required SDK 核心功能 -->
+98        <!-- 可配置android:process参数将PushService放在其他进程中 -->
+99        <service
+99-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:86:9-95:19
+100            android:name="cn.jpush.android.service.PushService"
+100-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:87:13-64
+101            android:process=":pushcore" >
+101-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:88:13-40
+102            <intent-filter>
+102-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:89:13-94:29
+103                <action android:name="cn.jpush.android.intent.REGISTER" />
+103-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:90:17-75
+103-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:90:25-72
+104                <action android:name="cn.jpush.android.intent.REPORT" />
+104-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:91:17-73
+104-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:91:25-70
+105                <action android:name="cn.jpush.android.intent.PushService" />
+105-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:92:17-78
+105-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:92:25-75
+106                <action android:name="cn.jpush.android.intent.PUSH_TIME" />
+106-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:93:17-76
+106-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:93:25-73
+107            </intent-filter>
+108        </service>
+109
+110        <!-- since 3.0.9 Required SDK 核心功能 -->
+111        <provider
+112            android:name="cn.jpush.android.service.DataProvider"
+112-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:100:13-65
+113            android:authorities="com.example.beijingnews.DataProvider"
+113-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:99:13-64
+114            android:exported="false"
+114-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:102:13-37
+115            android:process=":pushcore" />
+115-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:101:13-40
+116
+117        <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
+118        <!-- 若不启用该功能可删除该组件，或把 enabled 设置成 false ；App 不会被其他 App 拉起，但会拉起其他的 App。 -->
+119        <service
+119-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:107:9-116:19
+120            android:name="cn.jpush.android.service.DaemonService"
+120-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:108:13-66
+121            android:enabled="true"
+121-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:109:13-35
+122            android:exported="true" >
+122-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:110:13-36
+123            <intent-filter>
+123-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:111:13-114:29
+124                <action android:name="cn.jpush.android.intent.DaemonService" />
+124-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:112:17-80
+124-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:112:25-77
+125
+126                <category android:name="com.example.beijingnews" />
+126-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:80:27-58
+127            </intent-filter>
+128        </service>
+129
+130        <!-- 可选，如果使用静态Activity方式拉起，该组件必须声明 -->
+131        <activity
+131-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:119:9-128:20
+132            android:name="cn.jpush.android.service.DActivity"
+132-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:119:19-68
+133            android:enabled="true"
+133-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:120:13-35
+134            android:exported="true"
+134-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:121:13-36
+135            android:taskAffinity="jpush.custom"
+135-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:123:13-48
+136            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+136-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:122:13-72
+137            <intent-filter>
+137-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:124:13-127:29
+138                <action android:name="cn.jpush.android.intent.DActivity" />
+138-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:125:17-75
+138-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:125:25-73
+139
+140                <category android:name="com.example.beijingnews" />
+140-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:80:27-58
+141            </intent-filter>
+142        </activity>
+143
+144        <!-- since 3.1.0 Required SDK 核心功能 -->
+145        <provider
+146            android:name="cn.jpush.android.service.DownloadProvider"
+146-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:133:13-69
+147            android:authorities="com.example.beijingnews.DownloadProvider"
+147-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:132:13-68
+148            android:exported="true" />
+148-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:134:13-36
+149
+150        <!-- Required SDK核心功能 -->
+151        <receiver
+151-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:138:9-156:20
+152            android:name="cn.jpush.android.service.PushReceiver"
+152-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:139:13-65
+153            android:enabled="true" >
+153-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:140:13-35
+154            <intent-filter android:priority="1000" >
+154-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:141:13-144:29
+154-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:141:28-51
+155                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" /> <!-- Required  显示通知栏 -->
+155-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:142:17-94
+155-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:142:25-91
+156                <category android:name="com.example.beijingnews" />
+156-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:80:27-58
+157            </intent-filter>
+158            <intent-filter>
+158-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:145:13-148:29
+159                <action android:name="android.intent.action.USER_PRESENT" />
+159-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:146:17-77
+159-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:146:25-74
+160                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+160-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:147:17-79
+160-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:147:25-76
+161            </intent-filter>
+162            <!-- Optional -->
+163            <intent-filter>
+163-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:150:13-155:29
+164                <action android:name="android.intent.action.PACKAGE_ADDED" />
+164-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:151:17-78
+164-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:151:25-75
+165                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+165-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:152:17-80
+165-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:152:25-77
+166
+167                <data android:scheme="package" />
+167-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:154:17-50
+167-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:154:23-47
+168            </intent-filter>
+169        </receiver>
+170
+171        <!-- Required SDK核心功能 -->
+172        <receiver
+172-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:159:9-99
+173            android:name="cn.jpush.android.service.AlarmReceiver"
+173-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:159:19-72
+174            android:exported="false" />
+174-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:159:73-97
+175
+176        <!-- 3.5.0新增，用于定时展示功能 -->
+177        <receiver
+177-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:162:9-103
+178            android:name="cn.jpush.android.service.SchedulerReceiver"
+178-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:162:19-76
+179            android:exported="false" />
+179-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:162:77-101
+180
+181        <!-- 3.6.7 新增，用于负反馈组件 -->
+182        <service android:name="cn.jpush.android.service.MessagingIntentService" />
+182-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:165:9-83
+182-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:165:18-80
+183
+184        <!-- User defined.  For test only  用户自定义的广播接收器 -->
+185        <receiver
+185-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:168:9-179:20
+186            android:name="com.example.jpushdemo.MyReceiver"
+186-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:169:13-60
+187            android:enabled="true" >
+187-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:170:13-35
+188            <intent-filter>
+188-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:171:13-178:29
+189                <action android:name="cn.jpush.android.intent.REGISTRATION" /> <!-- Required  用户注册SDK的intent -->
+189-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:172:17-79
+189-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:172:25-76
+190                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> <!-- Required  用户接收SDK消息的intent -->
+190-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:173:17-83
+190-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:173:25-80
+191                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!-- Required  用户接收SDK通知栏信息的intent -->
+191-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:174:17-88
+191-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:174:25-85
+192                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!-- Required  用户打开自定义通知栏的intent -->
+192-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:175:17-86
+192-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:175:25-83
+193                <action android:name="cn.jpush.android.intent.CONNECTION" /> <!-- 接收网络变化 连接/断开 since 1.6.3 -->
+193-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:176:17-77
+193-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:176:25-74
+194                <category android:name="com.example.beijingnews" />
+194-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:80:27-58
+195            </intent-filter>
+196        </receiver>
+197
+198        <!-- User defined.  For test only  用户自定义接收消息器,3.0.7开始支持,目前新tag/alias接口设置结果会在该广播接收器对应的方法中回调 -->
+199        <!-- since 3.3.0 接收JPush相关事件 -->
+200        <receiver android:name="com.example.jpushdemo.PushMessageReceiver" >
+200-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:185:9-190:20
+200-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:185:19-75
+201            <intent-filter>
+201-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:186:13-189:29
+202                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
+202-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:187:17-82
+202-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:187:25-79
+203
+204                <category android:name="com.example.beijingnews" />
+204-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:80:27-58
+205            </intent-filter>
+206        </receiver>
+207
+208        <!-- since 3.3.0 Required SDK核心功能 -->
+209        <activity
+209-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:193:9-202:20
+210            android:name="cn.jpush.android.service.JNotifyActivity"
+210-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:194:13-68
+211            android:exported="false"
+211-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:195:13-37
+212            android:taskAffinity="jpush.custom"
+212-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:196:13-48
+213            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+213-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:197:13-72
+214            <intent-filter>
+214-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:198:13-201:29
+215                <action android:name="cn.jpush.android.intent.JNotifyActivity" />
+215-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:199:17-82
+215-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:199:25-79
+216
+217                <category android:name="com.example.beijingnews" />
+217-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:80:27-58
+218            </intent-filter>
+219        </activity>
+220
+221        <!-- since 3.3.0 Required SDK 核心功能 -->
+222        <!-- 可配置android:process参数将PushService放在其他进程中 -->
+223        <!-- User defined.  For test only 继承自cn.jpush.android.service.JCommonService -->
+224        <service
+224-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:207:9-212:19
+225            android:name="com.example.jpushdemo.PushService"
+225-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:207:18-66
+226            android:process=":pushcore" >
+226-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:208:13-40
+227            <intent-filter>
+227-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:209:13-211:29
+228                <action android:name="cn.jiguang.user.service.action" />
+228-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:210:17-73
+228-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:210:25-70
+229            </intent-filter>
+230        </service>
+231        <!-- since 3.5.6 新增华硕通道 -->
+232        <receiver android:name="cn.jpush.android.asus.AsusPushMessageReceiver" />
+232-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:214:9-91
+232-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:214:19-79
+233        <!-- Required  . Enable it you can get statistics data with channel -->
+234        <meta-data
+235            android:name="JPUSH_CHANNEL"
+235-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:216:20-48
+236            android:value="default_developer" />
+236-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:216:49-81
+237        <meta-data
+238            android:name="JPUSH_APPKEY"
+238-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:217:20-47
+239            android:value="43cc5c5917dfc14b4891c414" /> <!-- </>值来自开发者平台取得的AppKey -->
+239-->D:\AndroidStudioProjects\BeijingNews\JPushExample\src\main\AndroidManifest.xml:217:48-79
+240
+241    </application>
+242
+243</manifest>
