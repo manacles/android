@@ -192,8 +192,8 @@ public class NewsCenterPager extends BasePager {
         detailBasePagers = new ArrayList<>();
         detailBasePagers.add(new NewsMenuDetailPager(context, data.get(0)));
         detailBasePagers.add(new TopicMenuDetailPager(context, data.get(0)));
-        detailBasePagers.add(new PhotosMenuDetailPager(context,data.get(2))) ;
-        detailBasePagers.add(new InteractMenuDetailPager(context));
+        detailBasePagers.add(new PhotosMenuDetailPager(context, data.get(2)));
+        detailBasePagers.add(new InteractMenuDetailPager(context, data.get(2)));
 
 
         MainActivity mainActivity = (MainActivity) context;
@@ -312,6 +312,19 @@ public class NewsCenterPager extends BasePager {
                     PhotosMenuDetailPager photosMenuDetailPager = (PhotosMenuDetailPager) detailBasePagers.get(2);
                     //2.调用图组对象的切换ListView和GridView的方法
                     photosMenuDetailPager.switchListAndGrid(ibSwitchListGrid);
+                }
+            });
+        } else if (position == 3) {
+            //互动详情页面
+            ibSwitchListGrid.setVisibility(View.VISIBLE);
+            //设置点击事件
+            ibSwitchListGrid.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //1.得到图组详情页面对象
+                    InteractMenuDetailPager interactMenuDetailPager = (InteractMenuDetailPager) detailBasePagers.get(3);
+                    //2.调用图组对象的切换ListView和GridView的方法
+                    interactMenuDetailPager.switchListAndGrid(ibSwitchListGrid);
                 }
             });
         } else {
