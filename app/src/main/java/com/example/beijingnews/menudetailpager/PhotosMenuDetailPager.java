@@ -1,9 +1,11 @@
 package com.example.beijingnews.menudetailpager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -20,6 +22,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.StringRequest;
 import com.example.beijingnews.R;
+import com.example.beijingnews.activity.ShowImageActivity;
 import com.example.beijingnews.base.MenuDetailBasePager;
 import com.example.beijingnews.domain.NewsCenterPagerBean2;
 import com.example.beijingnews.domain.PhotosMenuDetailPagerBean;
@@ -60,8 +63,28 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
     public View initView() {
         View view = View.inflate(context, R.layout.photos_menu_detail_pager, null);
         x.view().inject(PhotosMenuDetailPager.this, view);
+
+        //设置点击某条的item的监听
+        listView.setOnItemClickListener(new MyOnItemClickListener());
+        gridView.setOnItemClickListener(new MyOnItemClickListener());
+
         return view;
     }
+
+    class MyOnItemClickListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            //根据位置得到对应的数据
+            PhotosMenuDetailPagerBean.DataBean.NewsBean newsBean = news.get(position);
+            String imgUrl = Constants.BASE_URL + newsBean.getLargeimage();
+
+            Intent intent = new Intent(context, ShowImageActivity.class);
+            intent.putExtra("imgUrl", imgUrl);
+            context.startActivity(intent);
+        }
+    }
+
 
     @Override
     public void initData() {
