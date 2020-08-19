@@ -24,6 +24,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.beijingnews.R;
 import com.example.beijingnews.base.MenuDetailBasePager;
 import com.example.beijingnews.domain.ImgCacheBean;
@@ -254,13 +256,24 @@ public class InteractMenuDetailPager extends MenuDetailBasePager {
             //1.使用Volley请求图片-设置图片
             //loaderImager(holder, imgUrl);
             //2.使用自定义的三级缓存工具类请求图片
-            holder.imageView.setTag(imgUrl);
+            /*holder.imageView.setTag(imgUrl);
             Bitmap bitmap = bitmapCacheUtils.getBitmap(imgUrl); //内存或者本地
             if (bitmap != null) {
                 holder.imageView.setImageBitmap(bitmap);
-            }
-
-
+            }*/
+            //3.使用Picasso请求图片
+            /*Picasso.get()
+                    .load(imgUrl)
+                    .placeholder(R.drawable.home_scroll_default)
+                    .error(R.drawable.home_scroll_default)
+                    .into(holder.imageView);*/
+            //4.使用Glide请求图片
+            Glide.with(context)
+                    .load(imgUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.home_scroll_default)
+                    .error(R.drawable.home_scroll_default)
+                    .into(holder.imageView);
             return convertView;
         }
     }
