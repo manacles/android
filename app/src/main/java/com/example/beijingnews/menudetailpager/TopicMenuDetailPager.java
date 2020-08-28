@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -103,10 +101,10 @@ public class TopicMenuDetailPager extends MenuDetailBasePager {
     /*自定义TabLayout的样式*/
     private View getTabView(int i) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_tab, null);
-        TextView tv = view.findViewById(R.id.textview);
-        ImageView imageView = view.findViewById(R.id.imageview);
-        tv.setText(childrenData.get(i).getTitle());
-        imageView.setImageResource(R.drawable.arrow_drop_up);
+        //TextView tv = view.findViewById(R.id.textview);
+        //ImageView imageView = view.findViewById(R.id.imageview);
+        //tv.setText(childrenData.get(i).getTitle());
+        //imageView.setImageResource(R.drawable.arrow_drop_up);
         return view;
     }
 
