@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".activity.GuideActivity">
 
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -26,7 +26,7 @@
         android:textSize="20sp"
         android:visibility="gone" />
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -34,16 +34,25 @@
         android:layout_marginBottom="40dp">
 
         <LinearLayout
-            android:id="@+id/ll_point_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/ll_tablayout_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
             android:orientation="horizontal" />
 
-        <ImageView
-            android:id="@+id/iv_red_point"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:background="@drawable/point_red" />
-    </RelativeLayout>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tablayout_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:tabIndicator="@drawable/custom_tablayout_indicator"
+            app:tabIndicatorColor="@android:color/holo_red_light"
+            app:tabIndicatorGravity="center"
+            app:tabIndicatorHeight="10dp"
+            app:tabPaddingEnd="-1dp"
+            app:tabPaddingStart="-1dp"
+            app:tabRippleColor="@null" />
+        <!--app:tabRippleColor="@null"表示去除默认点击效果-->
+    </FrameLayout>
 
 </RelativeLayout>

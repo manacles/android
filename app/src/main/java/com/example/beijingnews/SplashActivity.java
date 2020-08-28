@@ -20,8 +20,9 @@ import butterknife.ButterKnife;
 
 public class SplashActivity extends AppCompatActivity {
 
-    //静态常量
+    //静态常量，用于记录是否跳过引导页
     public static final String START_MAIN = "start_main";
+
     @BindView(R.id.ll_splash_root)
     LinearLayout llSplashRoot;
 
@@ -31,21 +32,19 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
 
-        //渐变动画，缩放动画，旋转动画
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
-        alphaAnimation.setFillAfter(true);
-
+        //透明度 渐变动画
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0, 0.7f);
+        //缩放动画
         ScaleAnimation scaleAnimation = new ScaleAnimation(0, 1, 0, 1, ScaleAnimation.RELATIVE_TO_SELF, 0.5f, ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
-        scaleAnimation.setFillAfter(true);
-
+        //旋转动画
         RotateAnimation rotateAnimation = new RotateAnimation(0, 360, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
-        rotateAnimation.setFillAfter(true);
 
         AnimationSet animationSet = new AnimationSet(false);
         //添加三个动画没有先后顺序,便于同时播放动画
         animationSet.addAnimation(alphaAnimation);
         animationSet.addAnimation(scaleAnimation);
         animationSet.addAnimation(rotateAnimation);
+        animationSet.setFillAfter(true);            //动画终止时停留在最后一帧
         animationSet.setDuration(2000);             //持续播放时间
 
         llSplashRoot.startAnimation(animationSet);
