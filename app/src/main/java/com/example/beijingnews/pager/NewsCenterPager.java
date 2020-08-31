@@ -198,6 +198,7 @@ public class NewsCenterPager extends BasePager {
 
         MainActivity mainActivity = (MainActivity) context;
         LeftmenuFragment leftmenuFragment = mainActivity.getLeftmenuFragment();
+        data.remove(data.size() - 1);       //去掉投票
         leftmenuFragment.setData(data);
     }
 

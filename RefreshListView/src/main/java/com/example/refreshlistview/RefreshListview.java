@@ -84,7 +84,7 @@ public class RefreshListview extends ListView {
         setOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                //当禁止或者惯性滚动的时候
+                //当静止或者惯性滚动的时候
                 if (scrollState == OnScrollListener.SCROLL_STATE_IDLE || scrollState == OnScrollListener.SCROLL_STATE_FLING) {
                     //并且是最后一条 可见
                     if (getLastVisiblePosition() >= getCount() - 1) {

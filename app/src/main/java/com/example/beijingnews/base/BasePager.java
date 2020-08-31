@@ -6,6 +6,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.core.view.GravityCompat;
+
 import com.example.beijingnews.R;
 import com.example.beijingnews.activity.MainActivity;
 
@@ -51,7 +53,7 @@ public class BasePager {
             @Override
             public void onClick(View v) {
                 MainActivity mainActivity = (MainActivity) context;
-                mainActivity.getSlidingMenu().toggle();     //开<--->关
+                mainActivity.getDrawerlayout().openDrawer(GravityCompat.START);
             }
         });
 

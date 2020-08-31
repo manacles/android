@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
 
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.beijingnews.R;
@@ -17,7 +18,6 @@ import com.example.beijingnews.pager.NewsCenterPager;
 import com.example.beijingnews.pager.SettingPager;
 import com.example.beijingnews.pager.SmartServicePager;
 import com.example.beijingnews.view.NoScrollViewPager;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -109,23 +109,23 @@ public class ContentFragment extends BaseFragment {
             switch (checkedId) {
                 case R.id.rb_home:
                     viewpager.setCurrentItem(0, false);
-                    isEnableSlidingMenu(SlidingMenu.TOUCHMODE_NONE);
+                    isEnableSlidingMenu(false);
                     break;
                 case R.id.rb_newscenter:
                     viewpager.setCurrentItem(1, false);
-                    isEnableSlidingMenu(SlidingMenu.TOUCHMODE_FULLSCREEN);
+                    isEnableSlidingMenu(true);
                     break;
                 case R.id.rb_smartservice:
                     viewpager.setCurrentItem(2, false);
-                    isEnableSlidingMenu(SlidingMenu.TOUCHMODE_NONE);
+                    isEnableSlidingMenu(false);
                     break;
                 case R.id.rb_govaffair:
                     viewpager.setCurrentItem(3, false);
-                    isEnableSlidingMenu(SlidingMenu.TOUCHMODE_NONE);
+                    isEnableSlidingMenu(false);
                     break;
                 case R.id.rb_setting:
                     viewpager.setCurrentItem(4, false);
-                    isEnableSlidingMenu(SlidingMenu.TOUCHMODE_NONE);
+                    isEnableSlidingMenu(false);
                     break;
             }
         }
@@ -133,13 +133,18 @@ public class ContentFragment extends BaseFragment {
 
 
     /**
-     * 根据传入的参数设置是否让SlidingMenu可以滑动
+     * 根据传入的参数设置是否让drawerlayout可以滑动
      *
-     * @param touchmodeFullscreen
+     * @param
      */
-    private void isEnableSlidingMenu(int touchmodeFullscreen) {
+    private void isEnableSlidingMenu(boolean canSlide) {
         MainActivity mainActivity = (MainActivity) context;
-        mainActivity.getSlidingMenu().setTouchModeAbove(touchmodeFullscreen);
+        if (canSlide) {
+            mainActivity.getDrawerlayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        } else {
+            mainActivity.getDrawerlayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
+
     }
 
 }

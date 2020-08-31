@@ -9,6 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.core.view.GravityCompat;
+
 import com.example.beijingnews.R;
 import com.example.beijingnews.activity.MainActivity;
 import com.example.beijingnews.base.BaseFragment;
@@ -55,7 +57,7 @@ public class LeftmenuFragment extends BaseFragment {
 
                 //2.把左侧菜单关闭
                 MainActivity mainActivity = (MainActivity) context;
-                mainActivity.getSlidingMenu().toggle();     //关<---->开
+                mainActivity.getDrawerlayout().closeDrawer(GravityCompat.START);
 
                 //3.切换到对应的详情页面
                 switchPager(prePosition);
@@ -66,6 +68,7 @@ public class LeftmenuFragment extends BaseFragment {
 
     /**
      * 根据位置切换不同详情页面
+     *
      * @param position
      */
     private void switchPager(int position) {
@@ -88,7 +91,7 @@ public class LeftmenuFragment extends BaseFragment {
      */
     public void setData(List<NewsCenterPagerBean2.NewsData> data) {
         this.data = data;
-        for (int i = 0; i < data.size(); i++) {
+        for (int i = 0; i < data.size() - 1; i++) {
             LogUtil.e(data.get(i).getTitle());
         }
 

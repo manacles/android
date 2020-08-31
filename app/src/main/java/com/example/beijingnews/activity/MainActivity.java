@@ -1,50 +1,40 @@
 package com.example.beijingnews.activity;
 
 import android.os.Bundle;
-import android.view.Window;
+import android.widget.FrameLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.beijingnews.R;
 import com.example.beijingnews.fragment.ContentFragment;
 import com.example.beijingnews.fragment.LeftmenuFragment;
-import com.example.beijingnews.utils.DensityUtil;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
-public class MainActivity extends SlidingFragmentActivity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class MainActivity extends AppCompatActivity {
 
     public static final String MAIN_CONTENT_TAG = "main_content_tag";
     public static final String LEFTMENU_TAG = "leftmenu_tag";
 
+    @BindView(R.id.fl_main_content)
+    FrameLayout flMainContent;
+    @BindView(R.id.fl_leftmenu)
+    FrameLayout flLeftmenu;
+    @BindView(R.id.drawerlayout)
+    DrawerLayout drawerlayout;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);      //设置没有标题
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        initSlidingMenu();
+        drawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         //初始化Fragment
         initFragment();
-    }
-
-    private void initSlidingMenu() {
-        //1.设置主页面
-        setContentView(R.layout.activity_main);
-
-        //2.设置左侧菜单
-        setBehindContentView(R.layout.activity_leftmenu);
-
-        //3.设置右侧菜单
-        SlidingMenu slidingMenu = getSlidingMenu();
-        slidingMenu.setSecondaryMenu(R.layout.activity_rightmenu); //设置右侧菜单
-
-        //4.设置显示的模式：左侧菜单+主页
-        slidingMenu.setMode(SlidingMenu.LEFT);
-
-        //5.设置滑动模式：滑动边缘、全屏滑动、不可以滑动
-        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
-
-        //6.设置主页占据的宽度
-        slidingMenu.setBehindOffset(DensityUtil.dip2px(MainActivity.this, 200));
     }
 
     private void initFragment() {
@@ -81,5 +71,9 @@ public class MainActivity extends SlidingFragmentActivity {
      */
     public ContentFragment getContentFragment() {
         return (ContentFragment) getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT_TAG);
+    }
+
+    public DrawerLayout getDrawerlayout() {
+        return drawerlayout;
     }
 }

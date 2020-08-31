@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -17,7 +18,6 @@ import com.example.beijingnews.base.MenuDetailBasePager;
 import com.example.beijingnews.domain.NewsCenterPagerBean2;
 import com.example.beijingnews.menudetailpager.tabdetailpager.TopicDetailPager;
 import com.google.android.material.tabs.TabLayout;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import org.xutils.common.util.LogUtil;
 import org.xutils.view.annotation.ViewInject;
@@ -118,7 +118,7 @@ public class TopicMenuDetailPager extends MenuDetailBasePager {
 
         @Override
         public void onPageSelected(int position) {
-            isEnableSlidingMenu(position == 0 ? SlidingMenu.TOUCHMODE_FULLSCREEN : SlidingMenu.TOUCHMODE_NONE);
+            isEnableSlidingMenu(position == 0 );
         }
 
         @Override
@@ -162,12 +162,17 @@ public class TopicMenuDetailPager extends MenuDetailBasePager {
     }
 
     /**
-     * 根据传入的参数设置是否让SlidingMenu可以滑动
+     * 根据传入的参数设置是否让drawerlayout可以滑动
      *
-     * @param touchmodeFullscreen
+     * @param
      */
-    private void isEnableSlidingMenu(int touchmodeFullscreen) {
+    private void isEnableSlidingMenu(boolean canSlide) {
         MainActivity mainActivity = (MainActivity) context;
-        mainActivity.getSlidingMenu().setTouchModeAbove(touchmodeFullscreen);
+        if (canSlide) {
+            mainActivity.getDrawerlayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        } else {
+            mainActivity.getDrawerlayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
+
     }
 }
