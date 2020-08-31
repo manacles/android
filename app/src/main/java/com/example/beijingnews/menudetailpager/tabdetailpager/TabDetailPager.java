@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.viewpager.widget.PagerAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -31,8 +33,9 @@ import com.example.beijingnews.domain.NewsCenterPagerBean2;
 import com.example.beijingnews.domain.TabDetailPagerBean;
 import com.example.beijingnews.utils.CacheUtils;
 import com.example.beijingnews.utils.Constants;
-import com.example.beijingnews.view.HorizontalScrollViewPager;
 import com.example.refreshlistview.RefreshListview;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.gson.Gson;
 
 import org.xutils.common.Callback;
@@ -50,11 +53,12 @@ import java.util.List;
 public class TabDetailPager extends MenuDetailBasePager {
 
     public static final String READ_ARRAY_ID = "read_array_id";
-    private HorizontalScrollViewPager viewPager;
+    private ViewPager2 viewPager;
     private TextView tvTitle;
-    private LinearLayout llPointGroup;
     private RefreshListview listView;
     private ImageOptions imageOptions;
+    private TabLayout tablayoutTopnews;
+    private LinearLayout llTablayoutBgTopnews;
 
     /**
      * 之前高亮点的位置
@@ -98,7 +102,9 @@ public class TabDetailPager extends MenuDetailBasePager {
         View topNewsView = View.inflate(context, R.layout.topnews, null);
         viewPager = topNewsView.findViewById(R.id.viewpager);
         tvTitle = topNewsView.findViewById(R.id.tv_title);
-        llPointGroup = topNewsView.findViewById(R.id.ll_point_group);
+        llTablayoutBgTopnews = topNewsView.findViewById(R.id.ll_tablayout_bg_topnews);
+        tablayoutTopnews = topNewsView.findViewById(R.id.tablayout_topnews);
+
 
         //把顶部轮播图以头的方式添加到ListView中
         //listView.addHeaderView(topNewsView);
@@ -154,6 +160,31 @@ public class TabDetailPager extends MenuDetailBasePager {
         return view;
     }
 
+    /*自定义TabLayout的样式*/
+    private View getTabView(boolean isTransparent) {
+        //-1dp转px
+        int oneDp = com.example.beijingnews.utils.DensityUtil.dip2px(context, -1);
+
+        View view = LayoutInflater.from(context).inflate(R.layout.item_tab, null);
+        ImageView imageView = view.findViewById(R.id.imageview);
+
+        if (isTransparent) {
+            //表示是给TabLayout添加自定义布局
+            view.setBackgroundColor(Color.TRANSPARENT);
+            // imageView.set
+            imageView.setBackgroundColor(Color.TRANSPARENT);
+        } else {
+            //表示给背景添加默认灰点视图
+            //因为自定义tablayout的视图想要填充tab,设置了  app:tabPaddingEnd="-1dp"
+            //                                          app:tabPaddingStart="-1dp"
+            //这里作为背景也设置个填充值，以保证位置一致
+            view.setPadding(oneDp, 0, oneDp, 0);
+            imageView.setBackgroundResource(R.drawable.point_normal);
+        }
+
+        return view;
+    }
+
     private void getMoreDataFromNet() {
         RequestParams params = new RequestParams(moreUrl);
         params.setConnectTimeout(4000);
@@ -201,6 +232,9 @@ public class TabDetailPager extends MenuDetailBasePager {
         }
         //联网请求数据
         getDataFromNet();
+
+        //添加tablayout指示器
+        addPoint();
     }
 
     private void getDataFromNet() {
@@ -257,15 +291,11 @@ public class TabDetailPager extends MenuDetailBasePager {
             //设置ViewPager的适配器
             viewPager.setAdapter(new TabDetailPagerTopNewsAdapter());
 
-            /**
-             * 设置 轮播图初始状态
-             */
-            addPoint();
             tvTitle.setText(topnews.get(prePosition).getTitle());
             viewPager.setCurrentItem(prePosition);
 
             //监听ViewPager的改变，设置红点变化和文本变化
-            viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
+            viewPager.registerOnPageChangeCallback(new MyOnPageChangeCallback());
 
             //准备ListView的数据集合
             news = bean.getData().getNews();
@@ -295,6 +325,30 @@ public class TabDetailPager extends MenuDetailBasePager {
 
     }
 
+    private void addPoint() {
+        llTablayoutBgTopnews.removeAllViews();
+        //设置背景：设置默认灰点
+        for (int i = 0; i < topnews.size(); i++) {
+            llTablayoutBgTopnews.addView(getTabView(false));
+        }
+        //设置固定或者滑动
+        tablayoutTopnews.setTabMode(TabLayout.MODE_FIXED);
+        TabLayoutMediator mediator = new TabLayoutMediator(tablayoutTopnews, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                //设置自定义的tablayout的tab
+                tab.setCustomView(getTabView(true));
+            }
+        });
+        mediator.attach();
+
+        //tablayout和viewpager2绑定过后，才可以禁用点击
+        for (int i = 0; i < tablayoutTopnews.getTabCount(); i++) {
+            TabLayout.Tab tab = tablayoutTopnews.getTabAt(i);
+            tab.view.setClickable(false);
+        }
+    }
+
     class InternalHandler extends Handler {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -313,26 +367,7 @@ public class TabDetailPager extends MenuDetailBasePager {
         }
     }
 
-    private void addPoint() {
-        llPointGroup.removeAllViews();      //移除所有红点
-        for (int i = 0; i < topnews.size(); i++) {
-            ImageView imageView = new ImageView(context);
-            imageView.setBackgroundResource(R.drawable.point_selector);
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DensityUtil.dip2px(5), DensityUtil.dip2px(5));
-
-            imageView.setEnabled(i == prePosition);
-            if (i != 0) {
-                params.leftMargin = DensityUtil.dip2px(8);
-            }
-
-            imageView.setLayoutParams(params);
-            llPointGroup.addView(imageView);
-        }
-    }
-
-    class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
-
+    class MyOnPageChangeCallback extends ViewPager2.OnPageChangeCallback {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -340,16 +375,9 @@ public class TabDetailPager extends MenuDetailBasePager {
 
         @Override
         public void onPageSelected(int position) {
-            //1.设置文本
             tvTitle.setText(topnews.get(position).getTitle());
-            //2.对应页面的点高亮
-            //把之前的设置为灰色
-            llPointGroup.getChildAt(prePosition).setEnabled(false);
-            //把当前的设置为红色
-            llPointGroup.getChildAt(position).setEnabled(true);
 
             prePosition = position;
-
         }
 
         private boolean isDragging = false;
@@ -373,6 +401,7 @@ public class TabDetailPager extends MenuDetailBasePager {
             }
         }
     }
+
 
     class TabDetailPagerNewsAdapter extends BaseAdapter {
 
@@ -453,36 +482,31 @@ public class TabDetailPager extends MenuDetailBasePager {
         TextView tvPubdate;
     }
 
-    class TabDetailPagerTopNewsAdapter extends PagerAdapter {
-
-        @Override
-        public int getCount() {
-            return topnews.size();
-        }
-
-        @Override
-        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-            return view == object;
-        }
+    class TabDetailPagerTopNewsAdapter extends RecyclerView.Adapter<TabDetailPagerTopNewsAdapter.ViewHolder> {
 
         @NonNull
         @Override
-        public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            ImageView imageView = new ImageView(context);
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_viewpager_guide, parent, false);
+            ViewHolder holder = new ViewHolder(view);
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
             //设置默认图片
-            imageView.setBackgroundResource(R.drawable.home_scroll_default);
+            holder.imageView.setBackgroundResource(R.drawable.home_scroll_default);
             //X轴和Y轴拉伸
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);     //图片拉伸
-            //把图片添加到容器中ViewPager
-            container.addView(imageView);
+            holder.imageView.setScaleType(ImageView.ScaleType.FIT_XY);     //图片拉伸
 
             TabDetailPagerBean.DataBean.TopnewsBean topnewsBean = topnews.get(position);
             String imgUrl = Constants.BASE_URL + topnewsBean.getTopimage();
 
             //联网请求图片
-            x.image().bind(imageView, imgUrl);
+            x.image().bind(holder.imageView, imgUrl);
 
-            imageView.setOnTouchListener(new View.OnTouchListener() {
+            holder.imageView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     switch (event.getAction()) {
@@ -499,12 +523,20 @@ public class TabDetailPager extends MenuDetailBasePager {
                 }
             });
 
-            return imageView;
         }
 
         @Override
-        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-            container.removeView((View) object);
+        public int getItemCount() {
+            return topnews.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            ImageView imageView;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                imageView = itemView.findViewById(R.id.iv_item);
+            }
         }
     }
 
