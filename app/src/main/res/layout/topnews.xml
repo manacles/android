@@ -1,57 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.youth.banner.Banner xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/banner"
+    app:banner_indicator_margin="8dp"
     android:layout_width="match_parent"
     android:layout_height="180dp"
-    android:orientation="vertical">
+    app:banner_indicator_gravity="right"
+    app:banner_indicator_selected_color="@android:color/holo_red_light" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="180dp" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#44000000"
-        android:padding="5dp">
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="8dp"
-            android:text="今日头条asjdfjasjofsa"
-            android:textColor="@android:color/white" />
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="8dp">
-            <!--这里给控件加边框，方便查看控件位置，以调整背景中的点和指示器位置一致-->
-            <LinearLayout
-                android:id="@+id/ll_tablayout_bg_topnews"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="horizontal" />
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tablayout_topnews"
-                android:layout_width="wrap_content"
-                android:layout_height="10dp"
-                android:layout_gravity="center_vertical"
-                app:tabIndicator="@drawable/custom_tablayout_indicator"
-                app:tabIndicatorColor="@android:color/holo_red_light"
-                app:tabIndicatorGravity="center"
-                app:tabIndicatorHeight="10dp"
-                app:tabPaddingEnd="-1dp"
-                app:tabPaddingStart="-1dp"
-                app:tabRippleColor="@null" />
-        </FrameLayout>
-
-    </RelativeLayout>
-</RelativeLayout>

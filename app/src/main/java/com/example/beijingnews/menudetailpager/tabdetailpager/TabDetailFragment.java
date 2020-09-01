@@ -1,26 +1,19 @@
 package com.example.beijingnews.menudetailpager.tabdetailpager;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -28,21 +21,22 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.beijingnews.R;
 import com.example.beijingnews.activity.NewsDetailActivity;
-import com.example.beijingnews.base.MenuDetailBasePager;
+import com.example.beijingnews.base.BaseFragment;
 import com.example.beijingnews.domain.NewsCenterPagerBean2;
 import com.example.beijingnews.domain.TabDetailPagerBean;
 import com.example.beijingnews.utils.CacheUtils;
 import com.example.beijingnews.utils.Constants;
 import com.example.refreshlistview.RefreshListview;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.gson.Gson;
+import com.youth.banner.Banner;
+import com.youth.banner.adapter.BannerAdapter;
+import com.youth.banner.indicator.CircleIndicator;
+import com.youth.banner.transformer.RotateYTransformer;
 
 import org.xutils.common.Callback;
 import org.xutils.common.util.DensityUtil;
 import org.xutils.common.util.LogUtil;
 import org.xutils.http.RequestParams;
-import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
 import java.util.List;
@@ -50,20 +44,12 @@ import java.util.List;
 /**
  * 页签详情页面
  */
-public class TabDetailPager extends MenuDetailBasePager {
+public class TabDetailFragment extends BaseFragment {
 
     public static final String READ_ARRAY_ID = "read_array_id";
-    private ViewPager2 viewPager;
-    private TextView tvTitle;
     private RefreshListview listView;
-    private ImageOptions imageOptions;
-    private TabLayout tablayoutTopnews;
-    private LinearLayout llTablayoutBgTopnews;
+    private Banner banner;
 
-    /**
-     * 之前高亮点的位置
-     */
-    private int prePosition;
 
     private final NewsCenterPagerBean2.NewsData.ChildrenData childrenData;
     private String url;
@@ -78,21 +64,11 @@ public class TabDetailPager extends MenuDetailBasePager {
     private String moreUrl;
     //是否加载更多
     private boolean isLoadMore = false;
-    private InternalHandler internalHandler;
 
-
-    public TabDetailPager(Context context, NewsCenterPagerBean2.NewsData.ChildrenData childrenData) {
-        super(context);
+    public TabDetailFragment(NewsCenterPagerBean2.NewsData.ChildrenData childrenData) {
         this.childrenData = childrenData;
-        imageOptions = new ImageOptions.Builder()
-                .setSize(DensityUtil.dip2px(90), DensityUtil.dip2px(90))
-                .setRadius(DensityUtil.dip2px(5))
-                .setCrop(true)
-                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
-                .setLoadingDrawableId(R.drawable.news_pic_default)
-                .setFailureDrawableId(R.drawable.news_pic_default)
-                .build();
     }
+
 
     @Override
     public View initView() {
@@ -100,10 +76,7 @@ public class TabDetailPager extends MenuDetailBasePager {
         listView = view.findViewById(R.id.listview);
 
         View topNewsView = View.inflate(context, R.layout.topnews, null);
-        viewPager = topNewsView.findViewById(R.id.viewpager);
-        tvTitle = topNewsView.findViewById(R.id.tv_title);
-        llTablayoutBgTopnews = topNewsView.findViewById(R.id.ll_tablayout_bg_topnews);
-        tablayoutTopnews = topNewsView.findViewById(R.id.tablayout_topnews);
+        banner = topNewsView.findViewById(R.id.banner);
 
 
         //把顶部轮播图以头的方式添加到ListView中
@@ -160,30 +133,6 @@ public class TabDetailPager extends MenuDetailBasePager {
         return view;
     }
 
-    /*自定义TabLayout的样式*/
-    private View getTabView(boolean isTransparent) {
-        //-1dp转px
-        int oneDp = com.example.beijingnews.utils.DensityUtil.dip2px(context, -1);
-
-        View view = LayoutInflater.from(context).inflate(R.layout.item_tab, null);
-        ImageView imageView = view.findViewById(R.id.imageview);
-
-        if (isTransparent) {
-            //表示是给TabLayout添加自定义布局
-            view.setBackgroundColor(Color.TRANSPARENT);
-            // imageView.set
-            imageView.setBackgroundColor(Color.TRANSPARENT);
-        } else {
-            //表示给背景添加默认灰点视图
-            //因为自定义tablayout的视图想要填充tab,设置了  app:tabPaddingEnd="-1dp"
-            //                                          app:tabPaddingStart="-1dp"
-            //这里作为背景也设置个填充值，以保证位置一致
-            view.setPadding(oneDp, 0, oneDp, 0);
-            imageView.setBackgroundResource(R.drawable.point_normal);
-        }
-
-        return view;
-    }
 
     private void getMoreDataFromNet() {
         RequestParams params = new RequestParams(moreUrl);
@@ -233,8 +182,6 @@ public class TabDetailPager extends MenuDetailBasePager {
         //联网请求数据
         getDataFromNet();
 
-        //添加tablayout指示器
-        addPoint();
     }
 
     private void getDataFromNet() {
@@ -288,14 +235,13 @@ public class TabDetailPager extends MenuDetailBasePager {
 
             //顶部轮播图的数据
             topnews = bean.getData().getTopnews();
-            //设置ViewPager的适配器
-            viewPager.setAdapter(new TabDetailPagerTopNewsAdapter());
 
-            tvTitle.setText(topnews.get(prePosition).getTitle());
-            viewPager.setCurrentItem(prePosition);
+            banner.setPageTransformer(new RotateYTransformer());       //设置切换效果
+            banner.setAdapter(new ImageAdapter(topnews))
+                    .setLoopTime(3000)
+                    .addBannerLifecycleObserver(null)//添加生命周期观察者
+                    .setIndicator(new CircleIndicator(context));
 
-            //监听ViewPager的改变，设置红点变化和文本变化
-            viewPager.registerOnPageChangeCallback(new MyOnPageChangeCallback());
 
             //准备ListView的数据集合
             news = bean.getData().getNews();
@@ -314,94 +260,56 @@ public class TabDetailPager extends MenuDetailBasePager {
 
         }
 
-        //发消息，每隔4000切换一次ViewPager页面
-        if (internalHandler == null) {
-            internalHandler = new InternalHandler();
-        }
-        //是把消息队列所有的消息和回调
-        internalHandler.removeCallbacksAndMessages(null);
-
-        internalHandler.postDelayed(new MyRunnable(), 4000);
-
     }
 
-    private void addPoint() {
-        llTablayoutBgTopnews.removeAllViews();
-        //设置背景：设置默认灰点
-        for (int i = 0; i < topnews.size(); i++) {
-            llTablayoutBgTopnews.addView(getTabView(false));
-        }
-        //设置固定或者滑动
-        tablayoutTopnews.setTabMode(TabLayout.MODE_FIXED);
-        TabLayoutMediator mediator = new TabLayoutMediator(tablayoutTopnews, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                //设置自定义的tablayout的tab
-                tab.setCustomView(getTabView(true));
-            }
-        });
-        mediator.attach();
+    /**
+     * 自定义布局，下面是常见的图片样式，更多实现可以看demo，可以自己随意发挥
+     */
+    public class ImageAdapter extends BannerAdapter<TabDetailPagerBean.DataBean.TopnewsBean, ImageAdapter.BannerViewHolder> {
 
-        //tablayout和viewpager2绑定过后，才可以禁用点击
-        for (int i = 0; i < tablayoutTopnews.getTabCount(); i++) {
-            TabLayout.Tab tab = tablayoutTopnews.getTabAt(i);
-            tab.view.setClickable(false);
+        public ImageAdapter(List<TabDetailPagerBean.DataBean.TopnewsBean> mDatas) {
+            //设置数据，也可以调用banner提供的方法,或者自己在adapter中实现
+            super(mDatas);
         }
-    }
 
-    class InternalHandler extends Handler {
+        //创建ViewHolder，可以用viewType这个字段来区分不同的ViewHolder
         @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            //切换到ViewPager的下一个页面
-            viewPager.setCurrentItem((viewPager.getCurrentItem() + 1) % topnews.size());
+        public BannerViewHolder onCreateHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_topnews_banner, parent, false);
 
-            internalHandler.postDelayed(new MyRunnable(), 4000);
-        }
-    }
-
-    class MyRunnable implements Runnable {
-        @Override
-        public void run() {
-            internalHandler.sendEmptyMessage(0);
-        }
-    }
-
-    class MyOnPageChangeCallback extends ViewPager2.OnPageChangeCallback {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+            ImageView imageView = new ImageView(parent.getContext());
+            //注意，必须设置为match_parent，这个是viewpager2强制要求的
+            imageView.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT));
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            return new BannerViewHolder(view);
         }
 
         @Override
-        public void onPageSelected(int position) {
-            tvTitle.setText(topnews.get(position).getTitle());
+        public void onBindView(BannerViewHolder holder, TabDetailPagerBean.DataBean.TopnewsBean data, int position, int size) {
+            String imgUrl = Constants.BASE_URL + data.getTopimage();
 
-            prePosition = position;
+            holder.imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            //图片加载自己实现
+            Glide.with(context)
+                    .load(imgUrl)
+                    //.apply(RequestOptions.bitmapTransform(new RoundedCorners(30)))
+                    .into(holder.imageView);
+            holder.textView.setText(data.getTitle());
         }
 
-        private boolean isDragging = false;
+        class BannerViewHolder extends RecyclerView.ViewHolder {
+            ImageView imageView;
+            TextView textView;
 
-        @Override
-        public void onPageScrollStateChanged(int state) {
-            if (state == ViewPager.SCROLL_STATE_DRAGGING) {    //拖拽
-                isDragging = true;
-                //拖拽要移除消息
-                internalHandler.removeCallbacksAndMessages(null);
-            } else if (state == ViewPager.SCROLL_STATE_SETTLING && isDragging) {  //惯性
-                //发消息
-                isDragging = false;
-                internalHandler.removeCallbacksAndMessages(null);
-                internalHandler.postDelayed(new MyRunnable(), 4000);
-            } else if (state == ViewPager.SCROLL_STATE_IDLE && isDragging) {  //静止
-                //发消息
-                isDragging = false;
-                internalHandler.removeCallbacksAndMessages(null);
-                internalHandler.postDelayed(new MyRunnable(), 4000);
+            public BannerViewHolder(@NonNull View view) {
+                super(view);
+                this.imageView = view.findViewById(R.id.iv_banner);
+                this.textView = view.findViewById(R.id.tv_banner);
             }
         }
     }
-
 
     class TabDetailPagerNewsAdapter extends BaseAdapter {
 
@@ -482,63 +390,6 @@ public class TabDetailPager extends MenuDetailBasePager {
         TextView tvPubdate;
     }
 
-    class TabDetailPagerTopNewsAdapter extends RecyclerView.Adapter<TabDetailPagerTopNewsAdapter.ViewHolder> {
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_viewpager_guide, parent, false);
-            ViewHolder holder = new ViewHolder(view);
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
-            //设置默认图片
-            holder.imageView.setBackgroundResource(R.drawable.home_scroll_default);
-            //X轴和Y轴拉伸
-            holder.imageView.setScaleType(ImageView.ScaleType.FIT_XY);     //图片拉伸
-
-            TabDetailPagerBean.DataBean.TopnewsBean topnewsBean = topnews.get(position);
-            String imgUrl = Constants.BASE_URL + topnewsBean.getTopimage();
-
-            //联网请求图片
-            x.image().bind(holder.imageView, imgUrl);
-
-            holder.imageView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            //是把消息队列所有的消息和回调
-                            internalHandler.removeCallbacksAndMessages(null);
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            internalHandler.removeCallbacksAndMessages(null);
-                            internalHandler.postDelayed(new MyRunnable(), 4000);
-                            break;
-                    }
-                    return true;
-                }
-            });
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return topnews.size();
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-            ImageView imageView;
-
-            public ViewHolder(@NonNull View itemView) {
-                super(itemView);
-                imageView = itemView.findViewById(R.id.iv_item);
-            }
-        }
-    }
 
     private TabDetailPagerBean parseJson(String json) {
         return new Gson().fromJson(json, TabDetailPagerBean.class);

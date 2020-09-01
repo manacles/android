@@ -1,29 +1,29 @@
 package com.example.beijingnews.menudetailpager;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.beijingnews.R;
 import com.example.beijingnews.activity.MainActivity;
 import com.example.beijingnews.base.MenuDetailBasePager;
 import com.example.beijingnews.domain.NewsCenterPagerBean2;
-import com.example.beijingnews.menudetailpager.tabdetailpager.TopicDetailPager;
+import com.example.beijingnews.menudetailpager.tabdetailpager.TabDetailFragment;
+import com.example.beijingnews.menudetailpager.tabdetailpager.TopicDetailFragment;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.xutils.common.util.LogUtil;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +32,7 @@ import java.util.List;
 public class TopicMenuDetailPager extends MenuDetailBasePager {
 
     @ViewInject(R.id.viewpager)
-    private ViewPager viewPager;
+    private ViewPager2 viewPager;
 
     @ViewInject(R.id.tablayout)
     private TabLayout tabLayout;
@@ -41,13 +41,13 @@ public class TopicMenuDetailPager extends MenuDetailBasePager {
     private ImageButton ibTabNext;
 
     //页签页面的数据的集合--数据
-    private List<NewsCenterPagerBean2.NewsData.ChildrenData> childrenData;
-    //页签页面的集合--页面
-    private ArrayList<TopicDetailPager> tabDetailPagers;
+    private List<NewsCenterPagerBean2.NewsData.ChildrenData> childrenDataList;
+
+    private NewsCenterPagerBean2.NewsData.ChildrenData childrenData;
 
     public TopicMenuDetailPager(Context context, NewsCenterPagerBean2.NewsData newsData) {
         super(context);
-        childrenData = newsData.getChildren();
+        childrenDataList = newsData.getChildren();
     }
 
     @Override
@@ -71,45 +71,26 @@ public class TopicMenuDetailPager extends MenuDetailBasePager {
         super.initData();
         LogUtil.e("专题详情页面的数据初始化了");
 
-        //准备专题详情页面的数据
-        tabDetailPagers = new ArrayList<>();
-        for (int i = 0; i < childrenData.size(); i++) {
-            tabDetailPagers.add(new TopicDetailPager(context, childrenData.get(i)));
-        }
 
-        //设置ViewPager的适配器
-        viewPager.setAdapter(new TopicMenuDetailPager.MyNewsMenuDetailPagerAdapter());
-        //ViewPager和TabPageIndicator关联
-        tabLayout.setupWithViewPager(viewPager);
-
-        //注意以后监听页面的变化，需要用TabPageIndicator来监听
-        viewPager.addOnPageChangeListener(new TopicMenuDetailPager.MyOnPageChangeListener());
-
-        //设置固定或者滑动
-        //tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        viewPager.setAdapter(new MyTopicMenuDetailPagerAdapter(new TabDetailFragment(childrenData)));
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        TabLayoutMediator mediator = new TabLayoutMediator(tabLayout,viewPager,new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                //设置自定义的tablayout的tab
+                //tab.setCustomView(getTabView(true));
+                tab.setText(childrenDataList.get(position).getTitle());
+            }
+        });
+        mediator.attach();
 
-        /*自定义TabLayout的样式*/
-        /*
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            TabLayout.Tab tab = tabLayout.getTabAt(i);
-            tab.setCustomView(getTabView(i));
-        }
-        */
-    }
 
-    /*自定义TabLayout的样式*/
-    private View getTabView(int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_tab, null);
-        //TextView tv = view.findViewById(R.id.textview);
-        //ImageView imageView = view.findViewById(R.id.imageview);
-        //tv.setText(childrenData.get(i).getTitle());
-        //imageView.setImageResource(R.drawable.arrow_drop_up);
-        return view;
+        viewPager.registerOnPageChangeCallback(new MyOnPageChangeCallback());
+
     }
 
 
-    class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
+    class MyOnPageChangeCallback extends ViewPager2.OnPageChangeCallback {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -127,37 +108,22 @@ public class TopicMenuDetailPager extends MenuDetailBasePager {
         }
     }
 
-    class MyNewsMenuDetailPagerAdapter extends PagerAdapter {
+    class MyTopicMenuDetailPagerAdapter extends FragmentStateAdapter {
 
-        @Nullable
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return childrenData.get(position).getTitle();
+
+        public MyTopicMenuDetailPagerAdapter(@NonNull Fragment fragment) {
+            super((FragmentActivity) context);
         }
 
         @NonNull
         @Override
-        public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            TopicDetailPager tabDetailPager = tabDetailPagers.get(position);
-            View rootView = tabDetailPager.rootView;
-            tabDetailPager.initData();      //初始化数据
-            container.addView(rootView);
-            return rootView;
+        public Fragment createFragment(int position) {
+            return new TopicDetailFragment(childrenDataList.get(position));
         }
 
         @Override
-        public int getCount() {
-            return tabDetailPagers.size();
-        }
-
-        @Override
-        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-            return view == object;
-        }
-
-        @Override
-        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-            container.removeView((View) object);
+        public int getItemCount() {
+            return childrenDataList.size();
         }
     }
 
