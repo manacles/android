@@ -4,12 +4,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.example.refreshlistview.RefreshListview
-        android:id="@+id/listview"
-        android:listSelector="@android:color/transparent"
+    <!-- <com.example.refreshlistview.RefreshListview
+         android:id="@+id/listview"
+         android:listSelector="@android:color/transparent"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:cacheColorHint="@android:color/transparent"
+         android:divider="@null" />-->
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefreshlayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:cacheColorHint="@android:color/transparent"
-        android:divider="@null" />
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>
