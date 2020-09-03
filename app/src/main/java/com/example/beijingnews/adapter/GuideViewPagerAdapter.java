@@ -1,15 +1,11 @@
 package com.example.beijingnews.adapter;
 
 import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.beijingnews.R;
 
 public class GuideViewPagerAdapter extends RecyclerView.Adapter {
 
@@ -24,8 +20,10 @@ public class GuideViewPagerAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_viewpager_guide, parent, false);
-        ViewHolder holder = new ViewHolder(view);
+        ImageView imageView = new ImageView(context);
+        imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        ViewHolder holder = new ViewHolder(imageView);
         return holder;
     }
 
@@ -41,11 +39,9 @@ public class GuideViewPagerAdapter extends RecyclerView.Adapter {
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            imageView = itemView.findViewById(R.id.iv_item);
+        public ViewHolder(@NonNull ImageView imageView) {
+            super(imageView);
         }
     }
 }
