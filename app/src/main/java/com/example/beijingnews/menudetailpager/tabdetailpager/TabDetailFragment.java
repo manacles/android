@@ -1,7 +1,6 @@
 package com.example.beijingnews.menudetailpager.tabdetailpager;
 
 import android.content.Intent;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -57,7 +56,6 @@ public class TabDetailFragment extends BaseFragment {
     private TabDetailAdapter adapter;
 
     private TabDetailPagerBean.DataBean data;
-    private Parcelable recyclerViewState;
 
     public TabDetailFragment(NewsCenterPagerBean2.NewsData.ChildrenData childrenData) {
         this.childrenData = childrenData;

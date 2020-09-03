@@ -55,7 +55,7 @@ public class TabDetailAdapter extends RecyclerView.Adapter {
         } else if (viewType == NEWS) {
             return new NewsViewHolder(context, inflater.inflate(R.layout.item_tabdetail_pager, parent, false));
         } else {
-            return new LoadMoreViewHolder(context, inflater.inflate(R.layout.refresh_footer, parent, false));
+            return new LoadMoreViewHolder(inflater.inflate(R.layout.refresh_footer, parent, false));
         }
     }
 
@@ -69,8 +69,9 @@ public class TabDetailAdapter extends RecyclerView.Adapter {
             newsViewHolder.setData(newsViewHolder, position);
         } else {
             LoadMoreViewHolder loadMoreViewHolder = (LoadMoreViewHolder) holder;
+            //通过传过来的状态值，判断是否显示底部的加载进度视图
             if (isLoading) {
-            loadMoreViewHolder.itemView.setVisibility(View.VISIBLE);
+                loadMoreViewHolder.itemView.setVisibility(View.VISIBLE);
             } else {
                 loadMoreViewHolder.itemView.setVisibility(View.GONE);
             }
@@ -185,15 +186,14 @@ public class TabDetailAdapter extends RecyclerView.Adapter {
     }
 
     private class LoadMoreViewHolder extends RecyclerView.ViewHolder {
-        //LinearLayout llFooterview;
 
-        public LoadMoreViewHolder(Context context, View itemView) {
+        public LoadMoreViewHolder(View itemView) {
             super(itemView);
-          //  llFooterview = itemView.findViewById(R.id.ll_footerview);
         }
     }
 
 
+    //设置是否加载更多状态
     public void setLoading(boolean isLoading) {
         this.isLoading = isLoading;
         notifyDataSetChanged();

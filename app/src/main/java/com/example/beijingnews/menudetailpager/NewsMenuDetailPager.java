@@ -40,10 +40,6 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
 
     //页签页面的数据的集合--数据
     private List<NewsCenterPagerBean2.NewsData.ChildrenData> childrenDataList;
-//    //页签页面的集合--页面
-//    private ArrayList<TabDetailPager> tabDetailPagers;
-
-    private NewsCenterPagerBean2.NewsData.ChildrenData childrenData;
 
     public NewsMenuDetailPager(Context context, NewsCenterPagerBean2.NewsData newsData) {
         super(context);
@@ -72,7 +68,7 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
         LogUtil.e("新闻详情页面的数据初始化了");
 
         //设置ViewPager的适配器
-        viewPager.setAdapter(new MyNewsMenuDetailPagerAdapter(new TabDetailFragment(childrenData)));
+        viewPager.setAdapter(new MyNewsMenuDetailPagerAdapter(context));
         //设置固定或者滑动
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         TabLayoutMediator mediator = new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
@@ -112,8 +108,9 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
 
     class MyNewsMenuDetailPagerAdapter extends FragmentStateAdapter {
 
-        public MyNewsMenuDetailPagerAdapter(@NonNull Fragment fragment) {
+        public MyNewsMenuDetailPagerAdapter(Context context) {
             super((FragmentActivity) context);
+
         }
 
         @NonNull
